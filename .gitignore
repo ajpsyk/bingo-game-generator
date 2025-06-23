@@ -2,4 +2,7 @@
 /output
 /Images
 /header
+/Frame
 /fonts
+__pycache__/
+*.py[cod]
