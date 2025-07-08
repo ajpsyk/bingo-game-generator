@@ -1,13 +1,13 @@
 class PageLayout:
     DPI = 300
-    PAGE_WIDTH_INCHES = 8.5
-    PAGE_HEIGHT_INCHES = 11
-    PAGE_WIDTH_PIXELS = int(PAGE_WIDTH_INCHES * DPI)
-    PAGE_HEIGHT_PIXELS = int(PAGE_HEIGHT_INCHES * DPI)
-    PAGE_MARGIN = int(0.5 * DPI)
+    WIDTH_INCHES = 8.5
+    HEIGHT_INCHES = 11
+    WIDTH_PIXELS = int(WIDTH_INCHES * DPI)
+    HEIGHT_PIXELS = int(HEIGHT_INCHES * DPI)
+    MARGIN = int(0.5 * DPI)
 
     FONT_PATH = "fonts/Dekko-Regular.ttf"
-    DEFAULT_OUTPUT_PATH = "output/preview_grid.pdf"
+    OUTPUT_PATH = "output/preview_grid.pdf"
 
 
 class BingoCardLayout:
