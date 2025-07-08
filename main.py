@@ -1,7 +1,19 @@
-from pages.calling_card_single import generate_calling_card_single
-from pages.bingo_cards_big import generate_bingo_cards_big
-from config import DEFAULT_IMAGE_FOLDER, DEFAULT_OUTPUT_PATH
+from config.layouts import PageLayout, BingoCardLayout, CallingCardsSinglePageLayout, CallingCardsMultiPageLayout, TokensLargeLayout, TokensSmallLayout
+from core.drawing import generate_bingo_card, generate_calling_cards_single, generate_calling_cards_multi, generate_tokens_large, generate_tokens_small
+
+def main():
+    page_layout = PageLayout()
+    bingo_card_layout = BingoCardLayout()
+    calling_card_single_layout = CallingCardsSinglePageLayout()
+    calling_card_multi_layout =  CallingCardsMultiPageLayout()
+    tokens_large_layout = TokensLargeLayout()
+    tokens_small_layout = TokensSmallLayout()
+
+    generate_bingo_card(page_layout, bingo_card_layout)
+    generate_calling_cards_single(page_layout, calling_card_single_layout)
+    generate_calling_cards_multi(page_layout, calling_card_multi_layout)
+    generate_tokens_large(page_layout, tokens_large_layout)
+    generate_tokens_small(page_layout, tokens_small_layout)
 
 if __name__ == "__main__":
-    generate_calling_card_single(DEFAULT_IMAGE_FOLDER, DEFAULT_OUTPUT_PATH)
-    #generate_bingo_cards_big(DEFAULT_IMAGE_FOLDER, DEFAULT_OUTPUT_PATH)
+    main()

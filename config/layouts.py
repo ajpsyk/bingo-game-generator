@@ -10,7 +10,7 @@ class PageLayout:
     DEFAULT_OUTPUT_PATH = "output/preview_grid.pdf"
 
 
-class BingoCardsLayout:
+class BingoCardLayout:
     GRID_COLS = 5
     GRID_ROWS = 5
 
@@ -45,19 +45,22 @@ class CallingCardsSinglePageLayout:
     BINGO_IMAGES_PATH = "Images/Bingo Images"
     HEADER_IMAGE_PATH = "Images/header/Calling_Card_Header.png"
 
+
 class CallingCardsMultiPageLayout:
     GRID_COLS = 2
     GRID_ROWS = 2
     BINGO_IMAGES_PATH = "Images/Bingo Images"
     SCISSORS_IMAGE_PATH = "Images/scissors/scissors.png"
 
-class BingoTokensLargeLayout:
+
+class TokensLargeLayout:
     GRID_COLS = 5
     GRID_ROWS = 5
     TOKEN_IMAGE_PATH = "Images/Bingo Token/bingotoken.png"
     SCISSORS_IMAGE_PATH = "Images/scissors/scissors.png"
 
-class BingoTokensSmallLayout:
+
+class TokensSmallLayout:
     GRID_COLS = 10
     GRID_ROWS = 10
     TOKEN_IMAGE_PATH = "Images/Bingo Token/bingotoken.png"
