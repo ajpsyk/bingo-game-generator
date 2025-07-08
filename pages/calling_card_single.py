@@ -23,8 +23,19 @@ LABEL_FONT_SCALE = 1.0
 
 HEADER_IMAGE_PATH = "header/Calling_Card_Header.png"
 
-
 def load_header(path, usable_width):
+    """
+    Loads and resizes the header image to fit within the usable width of the page.
+    
+    Args:
+        path (str): Path to the header image file.
+        usable_width (int): Width available for the header.
+    
+    Returns:
+        header (Image): The resized header image.
+        header_width (int): Width of the resized header.
+        header_height (int): Height of the resized header.
+    """
     header = Image.open(path).convert("RGBA")
     header_width, header_height = header.size
 
@@ -38,6 +49,20 @@ def load_header(path, usable_width):
 
 
 def draw_grid(draw, x, y, cols, rows, cell_width, cell_height, line_color, line_thickness):
+    """
+    Draws a rectangular grid on the canvas using the specified dimensions.
+    
+    Args:
+        draw (ImageDraw.Draw): The drawing context.
+        x (int): X-coordinate of the top-left corner of the grid.
+        y (int): Y-coordinate of the top-left corner of the grid.
+        cols (int): Number of columns.
+        rows (int): Number of rows.
+        cell_width (int): Width of each cell.
+        cell_height (int): Height of each cell.
+        line_color (str): Color of grid lines.
+        line_thickness (int): Thickness of grid lines.
+    """
     for i in range(rows + 1):
         y_line = y + i * cell_height
         draw.line([(x, y_line), (x + cols * cell_width, y_line)], fill=line_color, width=line_thickness)
@@ -48,6 +73,13 @@ def draw_grid(draw, x, y, cols, rows, cell_width, cell_height, line_color, line_
 
 
 def generate_calling_card_single(image_folder, output_path):
+    """
+    Generates a single-page calling card with a grid of labeled images and a header.
+    
+    Args:
+        image_folder (str): Folder containing PNG images to include in the grid.
+        output_path (str): File path to save the generated PDF.
+    """
     usable_width = PAGE_WIDTH - 2 * SIDE_MARGIN
     usable_height = PAGE_HEIGHT - TOP_MARGIN - BOTTOM_MARGIN
 
