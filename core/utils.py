@@ -1,15 +1,13 @@
 from PIL import ImageDraw
 
-def draw_margin_box(draw, layout, color="#FF0000", thickness=1):
+def draw_debug_box(draw, x0, y0, x1, y1, color="red", thickness=1):
     """
-    Draws a debug rectangle showing the printable margin area.
-    """
-    x0 = layout.MARGIN
-    y0 = layout.MARGIN
-    x1 = layout.WIDTH_PIXELS - layout.MARGIN
-    y1 = layout.HEIGHT_PIXELS - layout.MARGIN
+    Draws a rectangle outline for visual debugging.
 
-    draw.line([(x0, y0), (x1, y0)], fill=color, width=thickness)
-    draw.line([(x0, y1), (x1, y1)], fill=color, width=thickness)
-    draw.line([(x0, y0), (x0, y1)], fill=color, width=thickness)
-    draw.line([(x1, y0), (x1, y1)], fill=color, width=thickness)
+    Args:
+        draw: PIL.ImageDraw.Draw object.
+        x0, y0, x1, y1: Rectangle coordinates (top-left to bottom-right).
+        color: Outline color.
+        thickness: Outline thickness in pixels.
+    """
+    draw.rectangle([(x0, y0), (x1, y1)], outline=color, width=thickness)

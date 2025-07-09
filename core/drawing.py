@@ -1,21 +1,24 @@
-from core.utils import draw_margin_box
+from core.utils import draw_debug_box
 from PIL import Image, ImageDraw
 
 
 def generate_bingo_card(page_layout, bingo_card_layout):
     # generate white canvas and define print-safe area
-    canvas = Image.new("RGBA", (page_layout.WIDTH_PIXELS, page_layout.HEIGHT_PIXELS), (255, 255, 255, 255))
-    usable_width = page_layout.WIDTH_PIXELS - 2 * page_layout.MARGIN
-    usable_height = page_layout.HEIGHT_PIXELS - 2 * page_layout.MARGIN
+    height = page_layout.HEIGHT_PIXELS
+    width = page_layout.WIDTH_PIXELS
+    canvas = Image.new("RGBA", (width, height), (255, 255, 255, 255))
+    margin = page_layout.MARGIN
+    usable_width = width - 2 * margin
+    usable_height = height - 2 * margin
 
     # load and paste frame
     frame = Image.open(bingo_card_layout.FRAME_IMAGE_PATH).convert("RGBA").resize((usable_width, usable_height), Image.LANCZOS)
-    canvas.paste(frame, (page_layout.MARGIN, page_layout.MARGIN))
+    canvas.paste(frame, (margin, margin))
 
     # define content area
     padding = bingo_card_layout.FRAME_INNER_PADDING
-    content_x = page_layout.MARGIN + padding["left"]
-    content_y = page_layout.MARGIN + padding["top"]
+    content_x = margin + padding["left"]
+    content_y = margin + padding["top"]
     content_width = usable_width - padding["left"] - padding["right"]
     content_height = usable_height - padding["top"] - padding["bottom"]
 
@@ -32,29 +35,61 @@ def generate_bingo_card(page_layout, bingo_card_layout):
 
     # draw grid
     draw = ImageDraw.Draw(canvas)
+    line_color = bingo_card_layout.GRID_LINE_COLOR
+    line_thickness = bingo_card_layout.GRID_LINE_THICKNESS
+    cols = bingo_card_layout.GRID_COLS
+    rows = bingo_card_layout.GRID_ROWS
     grid_x = content_x
     grid_y = content_y + header_height
-    grid_height = usable_height - header_height
-    cell_width = bingo_card_layout.GRID_COL
+    grid_height = content_height - header_height
+    cell_width = content_width // cols
+    cell_height = grid_height // rows
 
-    # add content to cells
+    for i in range(rows + 1):
+        y_line = grid_y + i * cell_height
+        draw.line(
+            [(grid_x, y_line), (grid_x + cols * cell_width, y_line)],
+            fill=line_color,
+            width=line_thickness)
+    for j in range(cols + 1):
+        x_line = grid_x + j * cell_width
+        draw.line([(x_line, grid_y), (x_line, grid_y + rows * cell_height)],
+                  fill=line_color,
+                  width=line_thickness)
 
-    # prinatble area    
-    draw_margin_box(draw, page_layout)
-    # content area
-    draw.rectangle(
-        [(content_x, content_y), (content_x + content_width, content_y + content_height)],
-        outline="green",
-        width=2
+    # load images and labels and paste to cells
+    """
+    # Margin box
+    draw_debug_box(
+        draw,
+        page_layout.MARGIN,
+        page_layout.MARGIN,
+        page_layout.WIDTH_PIXELS - page_layout.MARGIN,
+        page_layout.HEIGHT_PIXELS - page_layout.MARGIN,
+        color="red"
     )
-    # header area
-    draw.rectangle(
-        [(header_x, content_y), (header_x + header_width, content_y + header_height)],
-        outline="blue",
-        width=1
+
+    # Content box
+    draw_debug_box(
+        draw,
+        content_x,
+        content_y,
+        content_x + content_width,
+        content_y + content_height,
+        color="green"
     )
 
-    canvas.save(page_layout.OUTPUT_PATH, "PDF", dpi=(page_layout.DPI, page_layout.DPI))
+    # Header box
+    draw_debug_box(
+        draw,
+        header_x,
+        content_y,
+        header_x + header_width,
+        content_y + header_height,
+        color="blue"
+    )
+    """
+    canvas.save(page_layout.OUTPUT_PATH, "PDF", dpi=(page_layout.DPI, page_layout.DPI))    
 
 
 def generate_calling_cards_single(page_layout, calling_card_single_layout):
