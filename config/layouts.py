@@ -19,14 +19,21 @@ class BingoCardLayout:
 
     LABEL_COLOR = "#581a4d"
 
+    FRAME_INNER_PADDING = {
+        "top": 95,
+        "bottom": 100,
+        "left": 80,
+        "right": 80
+    }
+
     LABEL_HEIGHT_RATIO = 0.14
     LABEL_GAP_RATIO = 0.3
     CELL_PADDING_Y_RATIO = 0.05
     LABEL_FONT_SCALE = 1.0
 
     BINGO_IMAGES_PATH = "Images/Bingo Images"
-    HEADER_IMAGE_PATH = "Images/header/Bingo_Card_Header.png"
-    FRAME_IMAGE_PATH = "Images/frame/Halloween_Border.png"
+    HEADER_IMAGE_PATH = "assets/header/Bingo_Card_Header.png"
+    FRAME_IMAGE_PATH = "assets/frame/Halloween_Border.png"
     FREE_SPACE_IMAGE_PATH = "Images/Free Space/Free_Space.png"
 
 
