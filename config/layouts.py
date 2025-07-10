@@ -1,7 +1,7 @@
 """Static layout config. Might convert to dataclass later if made dynamic."""
 
 class PageLayout:
-    DPI = 300
+    DPI = 200
     WIDTH_INCHES = 8.5
     HEIGHT_INCHES = 11
     WIDTH_PIXELS = int(WIDTH_INCHES * DPI)
