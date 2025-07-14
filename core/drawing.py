@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 from core.utils import draw_debug_box, fit_text_to_width 
 import os, random
 import time
-from math import hypot
+from math import hypot, ceil
 
 def generate_bingo_cards(page_layout, bingo_card_layout):
     global_start = time.time()
@@ -280,75 +280,53 @@ def generate_bingo_cards_multi(page_layout, bingo_card_multi_layout):
                     flattened_fs.paste(free_space_img, (0, 0), mask=free_space_img.getchannel("A"))
 
                     center_x = grid_x + 2 * cell_width
+                    center_2x = grid_2x + 2 * cell_width
                     center_y = grid_y + 2 * cell_height
                     fs_x = center_x + (cell_width - free_space_img.width) // 2
+                    fs_2x = center_2x + (cell_width - free_space_img.width) // 2
                     fs_y = center_y + (cell_height - free_space_img.height) // 2
 
                     card.paste(flattened_fs, (fs_x, fs_y))
+                    card.paste(flattened_fs, (fs_2x, fs_y))
                 else:
                     x0 = grid_x + col * cell_width
+                    x20 = grid_2x + col * cell_width
                     y0 = grid_y + row * cell_height
 
-                    img_path = os.path.join(bingo_card_multi_layout.BINGO_IMAGES_PATH, next(image_iter_left))
-                    img = Image.open(img_path).convert("RGBA").resize((available_img_width, available_img_height), Image.LANCZOS)
-                    flattened_img = Image.new("RGB", img.size, (255, 255, 255))
-                    flattened_img.paste(img, (0, 0), mask=img.getchannel("A"))
+                    img_left_path = os.path.join(bingo_card_multi_layout.BINGO_IMAGES_PATH, next(image_iter_left))
+                    img_right_path = os.path.join(bingo_card_multi_layout.BINGO_IMAGES_PATH, next(image_iter_right))
+                    img_left = Image.open(img_left_path).convert("RGBA").resize((available_img_width, available_img_height), Image.LANCZOS)
+                    img_right = Image.open(img_right_path).convert("RGBA").resize((available_img_width, available_img_height), Image.LANCZOS)
+                    flattened_left_img = Image.new("RGB", img_left.size, (255, 255, 255))
+                    flattened_right_img = Image.new("RGB", img_right.size, (255, 255, 255))
+                    flattened_left_img.paste(img_left, (0, 0), mask=img_left.getchannel("A"))
+                    flattened_right_img.paste(img_right, (0, 0), mask=img_right.getchannel("A"))
 
-                    img_x = x0 + (cell_width - flattened_img.width) // 2
+                    img_x = x0 + (cell_width - flattened_left_img.width) // 2
+                    img_2x = x20 + (cell_width - flattened_right_img.width) //2
                     img_y = y0 + padding_y
-                    card.paste(flattened_img, (img_x, img_y))
+                    card.paste(flattened_left_img, (img_x, img_y))
+                    card.paste(flattened_right_img, (img_2x, img_y))
 
-                    label = os.path.splitext(os.path.basename(img_path))[0].replace("_", " ").upper()
+                    label_left = os.path.splitext(os.path.basename(img_left_path))[0].replace("_", " ").upper()
+                    label_right = os.path.splitext(os.path.basename(img_right_path))[0].replace("_", " ").upper()
 
                     font_size = int(label_height * bingo_card_multi_layout.LABEL_FONT_SCALE)
                     font_loader = lambda size: ImageFont.truetype(page_layout.FONT_PATH, size)
-                    font = fit_text_to_width(label, font_loader, cell_width, font_size)
-                    bbox = font.getbbox(label)
-                    text_width = bbox[2] - bbox[0]
-                    text_x = x0 + (cell_width - text_width) // 2
-                    text_y = img_y + img.height + gap
+                    font_left = fit_text_to_width(label_left, font_loader, cell_width, font_size)
+                    font_right = fit_text_to_width(label_right, font_loader, cell_width, font_size)
+                    bbox_left = font_left.getbbox(label_left)
+                    bbox_right = font_right.getbbox(label_right)
+                    text_left_width = bbox_left[2] - bbox_left[0]
+                    text_right_width = bbox_right[2] - bbox_right[0]
+                    text_x = x0 + (cell_width - text_left_width) // 2
+                    text_2x = x20 + (cell_width - text_right_width) // 2
+                    text_y = img_y + img_left.height + gap
+                    text_2y = img_y + img_right.height + gap
 
-                    draw.text((text_x, text_y), label, font=font, fill=bingo_card_multi_layout.LABEL_COLOR)
+                    draw.text((text_x, text_y), label_left, font=font_left, fill=bingo_card_multi_layout.LABEL_COLOR)
+                    draw.text((text_2x, text_2y), label_right, font=font_right, fill=bingo_card_multi_layout.LABEL_COLOR)
 
-        for row in range(rows):
-            for col in range(cols):
-                if row == 2 and col == 2:
-                    free_space_path = bingo_card_multi_layout.FREE_SPACE_IMAGE_PATH
-                    free_space_img = Image.open(free_space_path).convert("RGBA").resize((available_img_width, available_img_height), Image.LANCZOS)
-                    flattened_fs = Image.new("RGB", free_space_img.size, (255, 255, 255))
-                    flattened_fs.paste(free_space_img, (0, 0), mask=free_space_img.getchannel("A"))
-
-                    center_x = grid_2x + 2 * cell_width
-                    center_y = grid_y + 2 * cell_height
-                    fs_x = center_x + (cell_width - free_space_img.width) // 2
-                    fs_y = center_y + (cell_height - free_space_img.height) // 2
-
-                    card.paste(flattened_fs, (fs_x, fs_y))
-                else:
-                    x0 = grid_2x + col * cell_width
-                    y0 = grid_y + row * cell_height
-
-                    img_path = os.path.join(bingo_card_multi_layout.BINGO_IMAGES_PATH, next(image_iter_right))
-                    img = Image.open(img_path).convert("RGBA").resize((available_img_width, available_img_height), Image.LANCZOS)
-                    flattened_img = Image.new("RGB", img.size, (255, 255, 255))
-                    flattened_img.paste(img, (0, 0), mask=img.getchannel("A"))
-
-                    img_x = x0 + (cell_width - flattened_img.width) // 2
-                    img_y = y0 + padding_y
-                    card.paste(flattened_img, (img_x, img_y))
-
-                    label = os.path.splitext(os.path.basename(img_path))[0].replace("_", " ").upper()
-
-                    font_size = int(label_height * bingo_card_multi_layout.LABEL_FONT_SCALE)
-                    font_loader = lambda size: ImageFont.truetype(page_layout.FONT_PATH, size)
-                    font = fit_text_to_width(label, font_loader, cell_width, font_size)
-                    bbox = font.getbbox(label)
-                    text_width = bbox[2] - bbox[0]
-                    text_x = x0 + (cell_width - text_width) // 2
-                    text_y = img_y + img.height + gap
-
-                    draw.text((text_x, text_y), label, font=font, fill=bingo_card_multi_layout.LABEL_COLOR)
-    
         bingo_cards.append(card)
         
     print(f"Generating all cards: {time.time() - start_total_cards:.2f}s")
@@ -423,8 +401,6 @@ def generate_calling_cards_single(page_layout, calling_card_single_layout):
         f for f in os.listdir(calling_card_single_layout.BINGO_IMAGES_PATH)
         if f.lower().endswith(".png")
     ]
-    random.shuffle(image_files)
-
     assert len(image_files) == cols * rows, f"Expected exactly {cols * rows} images"
 
     label_height = int(cell_height * calling_card_single_layout.LABEL_HEIGHT_RATIO)
@@ -478,7 +454,150 @@ def generate_calling_cards_single(page_layout, calling_card_single_layout):
     page.save(page_layout.OUTPUT_PATH, "PDF", dpi=(page_layout.DPI, page_layout.DPI))
 
 def generate_calling_cards_multi(page_layout, calling_card_multi_layout):
-    pass
+    # generate white canvas and define print-safe area
+    height = page_layout.HEIGHT_PIXELS
+    width = page_layout.WIDTH_PIXELS
+    base_page = Image.new("RGBA", (width, height), (255, 255, 255, 255))
+    margin = page_layout.MARGIN
+    usable_width = width - 2 * margin
+    usable_height = height - 2 * margin
+
+    # load and paste scissors icon
+    scissors = Image.open(calling_card_multi_layout.SCISSORS_IMAGE_PATH).convert("RGBA")
+    scissors_width, scissors_height = scissors.size
+    scissors_width = int(usable_width * calling_card_multi_layout.SCISSORS_WIDTH_SCALE_FACTOR)
+    scissors_height = int(usable_height * calling_card_multi_layout.SCISSORS_HEIGHT_SCALE_FACTOR)
+    scissors = scissors.resize((scissors_width, scissors_height), Image.LANCZOS)
+    flattened_scissors = Image.new("RGB", scissors.size, (255, 255, 255))
+    flattened_scissors.paste(scissors, (0, 0), mask=scissors.getchannel("A"))
+    base_page.paste(flattened_scissors, (margin, margin))
+
+    # draw grid
+    draw = ImageDraw.Draw(base_page)
+    line_color = calling_card_multi_layout.GRID_LINE_COLOR
+    line_thickness = calling_card_multi_layout.GRID_LINE_THICKNESS
+    cols = calling_card_multi_layout.GRID_COLS
+    rows = calling_card_multi_layout.GRID_ROWS
+    grid_x = margin
+    grid_y = margin + scissors_height + calling_card_multi_layout.SCISSORS_BOTTOM_MARGIN
+    grid_height = usable_height - scissors_height - calling_card_multi_layout.SCISSORS_BOTTOM_MARGIN
+    cell_width = usable_width // cols
+    cell_height = grid_height // rows
+
+    image_files = [
+        f for f in os.listdir(calling_card_multi_layout.BINGO_IMAGES_PATH)
+        if f.lower().endswith(".png")
+    ]
+
+    num_pages = ceil(len(image_files) / (rows * cols))
+    pages = []
+    image_iter = iter(image_files)
+
+    while num_pages > 0:
+        page = base_page.copy()
+        draw = ImageDraw.Draw(page)
+        col_iter = cols
+
+        if num_pages > 1:
+            row_iter = rows
+        else:
+            row_iter = 1
+
+        for i in range(row_iter + 1):
+            y_line = grid_y + i * cell_height
+            x1, y1 = (grid_x, y_line)
+            x2, y2 = (grid_x + cols * cell_width, y_line)
+            total_length = int(hypot(x2 - x1, y2 - y1))
+            dot_length = 10
+            gap_length = 5
+            num_dots = (total_length // (dot_length + gap_length))
+            dx = (x2 - x1) / total_length
+            dy = (y2 - y1) / total_length
+
+            for i in range(num_dots):
+                dot_start_x = x1 + (dot_length + gap_length) * i * dx
+                dot_start_y = y1 + (dot_length + gap_length) * i * dy
+                dot_end_x = dot_start_x + dot_length * dx
+                dot_end_y = dot_start_y + dot_length * dy
+                draw.line([(dot_start_x, dot_start_y), (dot_end_x, dot_end_y)], fill=line_color, width=line_thickness)
+
+        for j in range(col_iter + 1):
+            x_line = grid_x + j * cell_width
+            x1, y1 = (x_line, grid_y)
+            x2, y2 = (x_line, grid_y + row_iter * cell_height)
+            total_length = int(hypot(x2 - x1, y2 - y1))
+            dot_length = 10
+            gap_length = 5
+            num_dots = total_length // (dot_length + gap_length) + 1
+
+            dx = (x2 - x1) / total_length
+            dy = (y2 - y1) / total_length
+
+            for i in range(num_dots):
+                dot_start_x = x1 + (dot_length + gap_length) * i * dx
+                dot_start_y = y1 + (dot_length + gap_length) * i * dy
+                dot_end_x = dot_start_x + dot_length * dx
+                dot_end_y = dot_start_y + dot_length * dy
+                draw.line([(dot_start_x, dot_start_y), (dot_end_x, dot_end_y)], fill=line_color, width=line_thickness)
+
+    
+        label_height = int(cell_height * calling_card_multi_layout.LABEL_HEIGHT_RATIO)
+        gap = int(label_height * calling_card_multi_layout.LABEL_GAP_RATIO)
+        padding_y = int(cell_height * calling_card_multi_layout.CELL_PADDING_Y_RATIO)
+        padding_x = int(cell_width * calling_card_multi_layout.CELL_PADDING_X_RATIO)
+
+        available_img_height = cell_height - 2 * padding_y - gap - label_height
+        available_img_width = cell_width - 2 * padding_x
+
+        font_size = int(label_height * calling_card_multi_layout.LABEL_FONT_SCALE)
+        font = ImageFont.truetype(page_layout.FONT_PATH, size=font_size)
+
+        for row in range(row_iter):
+            for col in range(col_iter):
+                x0 = grid_x + col * cell_width
+                y0 = grid_y + row * cell_height
+
+                img_path = os.path.join(calling_card_multi_layout.BINGO_IMAGES_PATH, next(image_iter))
+                img = Image.open(img_path).convert("RGBA").resize((available_img_width, available_img_height), Image.LANCZOS)
+                flattened_img = Image.new("RGB", img.size, (255, 255, 255))
+                flattened_img.paste(img, (0, 0), mask=img.getchannel("A"))
+
+                img_x = x0 + (cell_width - flattened_img.width) // 2
+                img_y = y0 + padding_y
+                page.paste(flattened_img, (img_x, img_y))
+
+                label = os.path.splitext(os.path.basename(img_path))[0].replace("_", " ").upper()
+
+                font_size = int(label_height * calling_card_multi_layout.LABEL_FONT_SCALE)
+                font_loader = lambda size: ImageFont.truetype(page_layout.FONT_PATH, size)
+                font = fit_text_to_width(label, font_loader, available_img_width, font_size)
+                dummy_draw = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+                bbox = dummy_draw.textbbox((0, 0), label, font=font)
+                text_width = bbox[2] - bbox[0]
+                text_height = bbox[3] - bbox[1]
+                text_patch = Image.new("RGB", (text_width, text_height), (255, 255, 255))
+                text_draw = ImageDraw.Draw(text_patch)
+                text_draw.text((-bbox[0], -bbox[1]), label, font=font, fill=calling_card_multi_layout.LABEL_COLOR)
+
+                text_x = x0 + (cell_width - text_width) // 2
+                text_y = img_y + img.height + gap
+
+                page.paste(text_patch, (text_x, text_y))
+
+        num_pages = num_pages - 1
+        pages.append(page)
+
+    if pages:
+        first_card = pages[0].convert("RGB")
+        rest_cards = [card.convert("RGB") for card in pages[1:]]
+        first_card.save(
+            page_layout.OUTPUT_PATH,
+            "PDF",
+            resolution=page_layout.DPI,
+            save_all=True,
+            append_images=rest_cards
+        )
+
 
 def generate_tokens(page_layout, tokens_layout):
     # generate white canvas and define print-safe area
@@ -537,7 +656,6 @@ def generate_tokens(page_layout, tokens_layout):
         x1, y1 = (x_line, grid_y)
         x2, y2 = (x_line, grid_y + rows * cell_height)
         total_length = int(hypot(x2 - x1, y2 - y1))
-        print(total_length)
         dot_length = 5
         gap_length = 5
         num_dots = total_length // (dot_length + gap_length)
@@ -551,7 +669,6 @@ def generate_tokens(page_layout, tokens_layout):
             dot_end_x = dot_start_x + dot_length * dx
             dot_end_y = dot_start_y + dot_length * dy
             draw.line([(dot_start_x, dot_start_y), (dot_end_x, dot_end_y)], fill=line_color, width=line_thickness)
-            print(dot_end_y)
 
     padding_x = int(cell_width * tokens_layout.CELL_PADDING_X_RATIO)
     available_img_width = cell_width - 2 * padding_x
