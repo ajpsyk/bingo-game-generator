@@ -1,6 +1,7 @@
 from config.layouts import PageLayout, BingoCardLayout, BingoCardMultiLayout, CallingCardsSinglePageLayout, CallingCardsMultiPageLayout, TokensLayout
 from core.drawing import generate_bingo_cards, generate_bingo_cards_multi, generate_calling_cards_single, generate_calling_cards_multi, generate_tokens
 # todo combine pdfs
+# todo consolidate repeat logic
 def main():
     page_layout = PageLayout()
     #bingo_card_layout = BingoCardLayout()
