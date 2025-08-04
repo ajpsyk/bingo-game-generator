@@ -1,14 +1,20 @@
 """Static layout config. Might convert to dataclass later if made dynamic."""
 # specific output paths for each layout
 # make frame optional
+# maybe make way to save settings
 
 class PageLayout:
     DPI = 200
+
     WIDTH_INCHES = 8.5
     HEIGHT_INCHES = 11
     WIDTH_PIXELS = int(WIDTH_INCHES * DPI)
     HEIGHT_PIXELS = int(HEIGHT_INCHES * DPI)
-    MARGIN = int(0.3 * DPI)
+
+    BOTTOM_MARGIN = int(0.5 * DPI)
+    LEFT_MARGIN = int(0.5 * DPI)
+    RIGHT_MARGIN = int(0.5 * DPI)
+    TOP_MARGIN = int(0.3 * DPI)
 
     FONT_PATH = "assets/fonts/Dekko-Regular.ttf"
     OUTPUT_PATH = "output/preview_grid.pdf"
@@ -16,11 +22,6 @@ class PageLayout:
 class BingoCardLayout:
     CARD_AMOUNT = 1
 
-    GRID_COLS = 5
-    GRID_ROWS = 5
-
-    GRID_LINE_COLOR = "#69622c"
-    GRID_LINE_THICKNESS = 2
 
     LABEL_COLOR = "#581a4d"
 
@@ -31,6 +32,15 @@ class BingoCardLayout:
         "left": int(100 * (PageLayout.DPI / 300)),
         "right": int(100 * (PageLayout.DPI / 300))
     } # all values in pixels
+
+
+    HEADER_MARGIN_BOTTOM = int(0.1 * PageLayout.DPI)
+
+    GRID_COLS = 5
+    GRID_ROWS = 5
+
+    GRID_LINE_COLOR = "#69622c"
+    GRID_LINE_THICKNESS = 2
 
     LABEL_HEIGHT_RATIO = 0.14
     LABEL_GAP_RATIO = 0.3
@@ -45,7 +55,7 @@ class BingoCardLayout:
 
 class BingoCardMultiLayout:
     CARD_AMOUNT = 2
-    CARD_SPACING = int(PageLayout.MARGIN * 2 * PageLayout.DPI)
+    #CARD_SPACING = int(PageLayout.MARGIN * 2 * PageLayout.DPI)
 
     GRID_COLS = 5
     GRID_ROWS = 5

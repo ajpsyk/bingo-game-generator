@@ -13,23 +13,23 @@ def generate_bingo_cards(page_layout, bingo_card_layout):
     height = page_layout.HEIGHT_PIXELS
     width = page_layout.WIDTH_PIXELS
     base_card = Image.new("RGBA", (width, height), (255, 255, 255, 255))
-    margin = page_layout.MARGIN
-    usable_width = width - 2 * margin
-    usable_height = height - 2 * margin
+    
+    usable_width = width - page_layout.LEFT_MARGIN - page_layout.RIGHT_MARGIN
+    usable_height = height - page_layout.TOP_MARGIN - page_layout.BOTTOM_MARGIN
 
     # load and paste frame (optional)
     if bingo_card_layout.FRAME_ENABLED:
         frame = Image.open(bingo_card_layout.FRAME_IMAGE_PATH).convert("RGBA").resize((usable_width, usable_height), Image.LANCZOS)
         flattened_frame = Image.new("RGB", frame.size, (255, 255, 255))
         flattened_frame.paste(frame, (0,0), mask=frame.getchannel("A"))
-        base_card.paste(flattened_frame, (margin, margin))
+        base_card.paste(flattened_frame, (page_layout.LEFT_MARGIN, page_layout.TOP_MARGIN))
         padding = bingo_card_layout.FRAME_INNER_PADDING
     else:
         padding = {"left": 0, "right": 0, "top": 0, "bottom": 0}
 
     # define content area
-    content_x = margin + padding["left"]
-    content_y = margin + padding["top"]
+    content_x = page_layout.LEFT_MARGIN + padding["left"]
+    content_y = page_layout.TOP_MARGIN + padding["top"]
     content_width = usable_width - padding["left"] - padding["right"]
     content_height = usable_height - padding["top"] - padding["bottom"]
 
@@ -54,7 +54,7 @@ def generate_bingo_cards(page_layout, bingo_card_layout):
     cols = bingo_card_layout.GRID_COLS
     rows = bingo_card_layout.GRID_ROWS
     grid_x = content_x
-    grid_y = content_y + header_height
+    grid_y = content_y + header_height + bingo_card_layout.HEADER_MARGIN_BOTTOM
     grid_height = content_height - header_height
     cell_width = content_width // cols
     cell_height = grid_height // rows
