@@ -1,4 +1,6 @@
 """Static layout config. Might convert to dataclass later if made dynamic."""
+# specific output paths for each layout
+# make frame optional
 
 class PageLayout:
     DPI = 200
@@ -12,7 +14,7 @@ class PageLayout:
     OUTPUT_PATH = "output/preview_grid.pdf"
 
 class BingoCardLayout:
-    CARD_AMOUNT = 50
+    CARD_AMOUNT = 1
 
     GRID_COLS = 5
     GRID_ROWS = 5
@@ -22,6 +24,7 @@ class BingoCardLayout:
 
     LABEL_COLOR = "#581a4d"
 
+    FRAME_ENABLED = False
     FRAME_INNER_PADDING = {
         "top": int(95 * (PageLayout.DPI / 300)),
         "bottom": int(120 * (PageLayout.DPI / 300)),

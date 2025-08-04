@@ -17,14 +17,17 @@ def generate_bingo_cards(page_layout, bingo_card_layout):
     usable_width = width - 2 * margin
     usable_height = height - 2 * margin
 
-    # load and paste frame
-    frame = Image.open(bingo_card_layout.FRAME_IMAGE_PATH).convert("RGBA").resize((usable_width, usable_height), Image.LANCZOS)
-    flattened_frame = Image.new("RGB", frame.size, (255, 255, 255))
-    flattened_frame.paste(frame, (0,0), mask=frame.getchannel("A"))
-    base_card.paste(flattened_frame, (margin, margin))
+    # load and paste frame (optional)
+    if bingo_card_layout.FRAME_ENABLED:
+        frame = Image.open(bingo_card_layout.FRAME_IMAGE_PATH).convert("RGBA").resize((usable_width, usable_height), Image.LANCZOS)
+        flattened_frame = Image.new("RGB", frame.size, (255, 255, 255))
+        flattened_frame.paste(frame, (0,0), mask=frame.getchannel("A"))
+        base_card.paste(flattened_frame, (margin, margin))
+        padding = bingo_card_layout.FRAME_INNER_PADDING
+    else:
+        padding = {"left": 0, "right": 0, "top": 0, "bottom": 0}
 
     # define content area
-    padding = bingo_card_layout.FRAME_INNER_PADDING
     content_x = margin + padding["left"]
     content_y = margin + padding["top"]
     content_width = usable_width - padding["left"] - padding["right"]
