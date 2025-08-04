@@ -96,6 +96,7 @@ def generate_bingo_cards(page_layout, bingo_card_layout):
     
     bingo_cards = []
     start_total_cards = time.time()
+    # todo: labels need to fit within cell padding
     for image_set in card_image_sets:
         card = base_card.copy()
         draw = ImageDraw.Draw(card)
@@ -132,7 +133,7 @@ def generate_bingo_cards(page_layout, bingo_card_layout):
 
                     font_size = int(label_height * bingo_card_layout.LABEL_FONT_SCALE)
                     font_loader = lambda size: ImageFont.truetype(page_layout.FONT_PATH, size)
-                    font = fit_text_to_width(label, font_loader, cell_width, font_size)
+                    font = fit_text_to_width(label, font_loader, cell_width - 2 * padding_x, font_size)
                     bbox = font.getbbox(label)
                     text_width = bbox[2] - bbox[0]
                     text_x = x0 + (cell_width - text_width) // 2
@@ -148,7 +149,7 @@ def generate_bingo_cards(page_layout, bingo_card_layout):
         first_card = bingo_cards[0].convert("RGB")
         rest_cards = [card.convert("RGB") for card in bingo_cards[1:]]
         first_card.save(
-            page_layout.OUTPUT_PATH,
+            bingo_card_layout.OUTPUT_PATH,
             "PDF",
             resolution=page_layout.DPI,
             save_all=True,

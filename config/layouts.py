@@ -1,7 +1,9 @@
 """Static layout config. Might convert to dataclass later if made dynamic."""
+# todos
 # specific output paths for each layout
 # make frame optional
 # maybe make way to save settings
+# decouple inches from DPI pixel path
 
 class PageLayout:
     DPI = 200
@@ -11,9 +13,9 @@ class PageLayout:
     WIDTH_PIXELS = int(WIDTH_INCHES * DPI)
     HEIGHT_PIXELS = int(HEIGHT_INCHES * DPI)
 
-    BOTTOM_MARGIN = int(0.5 * DPI)
-    LEFT_MARGIN = int(0.5 * DPI)
-    RIGHT_MARGIN = int(0.5 * DPI)
+    BOTTOM_MARGIN = int(0.3 * DPI)
+    LEFT_MARGIN = int(0.3 * DPI)
+    RIGHT_MARGIN = int(0.3 * DPI)
     TOP_MARGIN = int(0.3 * DPI)
 
     FONT_PATH = "assets/fonts/Dekko-Regular.ttf"
@@ -25,10 +27,10 @@ class BingoCardLayout:
 
     LABEL_COLOR = "#581a4d"
 
-    FRAME_ENABLED = False
+    FRAME_ENABLED = True
     FRAME_INNER_PADDING = {
         "top": int(95 * (PageLayout.DPI / 300)),
-        "bottom": int(120 * (PageLayout.DPI / 300)),
+        "bottom": int(160 * (PageLayout.DPI / 300)),
         "left": int(100 * (PageLayout.DPI / 300)),
         "right": int(100 * (PageLayout.DPI / 300))
     } # all values in pixels
@@ -52,6 +54,8 @@ class BingoCardLayout:
     HEADER_IMAGE_PATH = "assets/header/Bingo_Card_Header.png"
     FRAME_IMAGE_PATH = "assets/frame/Halloween_Border.png"
     FREE_SPACE_IMAGE_PATH = "assets/free space/Free_Space.png"
+
+    OUTPUT_PATH = "output/Bingo_Cards.pdf"
 
 class BingoCardMultiLayout:
     CARD_AMOUNT = 2
