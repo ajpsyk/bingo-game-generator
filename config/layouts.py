@@ -6,7 +6,7 @@
 # decouple inches from DPI pixel path
 
 class PageLayout:
-    DPI = 200
+    DPI = 225
 
     WIDTH_INCHES = 8.5
     HEIGHT_INCHES = 11
@@ -25,14 +25,14 @@ class BingoCardLayout:
     CARD_AMOUNT = 1
 
 
-    LABEL_COLOR = "#581a4d"
+    LABEL_COLOR = "#71331d"
 
     FRAME_ENABLED = True
     FRAME_INNER_PADDING = {
-        "top": int(95 * (PageLayout.DPI / 300)),
-        "bottom": int(160 * (PageLayout.DPI / 300)),
-        "left": int(100 * (PageLayout.DPI / 300)),
-        "right": int(100 * (PageLayout.DPI / 300))
+        "top": int(140 * (PageLayout.DPI / 300)),
+        "bottom": int(140 * (PageLayout.DPI / 300)),
+        "left": int(140 * (PageLayout.DPI / 300)),
+        "right": int(140 * (PageLayout.DPI / 300))
     } # all values in pixels
 
 
@@ -42,7 +42,7 @@ class BingoCardLayout:
     GRID_ROWS = 5
 
     GRID_LINE_COLOR = "#69622c"
-    GRID_LINE_THICKNESS = 2
+    GRID_LINE_THICKNESS = int(7 * (PageLayout.DPI / 300))
 
     LABEL_HEIGHT_RATIO = 0.14
     LABEL_GAP_RATIO = 0.3
@@ -51,9 +51,9 @@ class BingoCardLayout:
     LABEL_FONT_SCALE = 1.0
 
     BINGO_IMAGES_PATH = "assets/bingo images"
-    HEADER_IMAGE_PATH = "assets/header/Bingo_Card_Header.png"
-    FRAME_IMAGE_PATH = "assets/frame/Halloween_Border.png"
-    FREE_SPACE_IMAGE_PATH = "assets/free space/Free_Space.png"
+    HEADER_IMAGE_PATH = "assets/header/Hygge_Header.png"
+    FRAME_IMAGE_PATH = "assets/frame/hygge_bingo.png"
+    FREE_SPACE_IMAGE_PATH = "assets/free space/Free Space.png"
 
     OUTPUT_PATH = "output/Bingo_Cards.pdf"
 
