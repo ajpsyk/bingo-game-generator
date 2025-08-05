@@ -22,17 +22,17 @@ class PageLayout:
     OUTPUT_PATH = "output/preview_grid.pdf"
 
 class BingoCardLayout:
-    CARD_AMOUNT = 1
+    CARD_AMOUNT = 2
 
 
-    LABEL_COLOR = "#71331d"
+    LABEL_COLOR = "#581a4d"
 
     FRAME_ENABLED = True
     FRAME_INNER_PADDING = {
-        "top": int(140 * (PageLayout.DPI / 300)),
-        "bottom": int(140 * (PageLayout.DPI / 300)),
-        "left": int(140 * (PageLayout.DPI / 300)),
-        "right": int(140 * (PageLayout.DPI / 300))
+        "top": int(95 * (PageLayout.DPI / 300)),
+        "bottom": int(160 * (PageLayout.DPI / 300)),
+        "left": int(100 * (PageLayout.DPI / 300)),
+        "right": int(100 * (PageLayout.DPI / 300))
     } # all values in pixels
 
 
@@ -46,39 +46,7 @@ class BingoCardLayout:
 
     LABEL_HEIGHT_RATIO = 0.14
     LABEL_GAP_RATIO = 0.3
-    CELL_PADDING_X_RATIO = 0.1
-    CELL_PADDING_Y_RATIO = 0.05
-    LABEL_FONT_SCALE = 1.0
-
-    BINGO_IMAGES_PATH = "assets/bingo images"
-    HEADER_IMAGE_PATH = "assets/header/Hygge_Header.png"
-    FRAME_IMAGE_PATH = "assets/frame/hygge_bingo.png"
-    FREE_SPACE_IMAGE_PATH = "assets/free space/Free Space.png"
-
-    OUTPUT_PATH = "output/Bingo_Cards.pdf"
-
-class BingoCardMultiLayout:
-    CARD_AMOUNT = 2
-    #CARD_SPACING = int(PageLayout.MARGIN * 2 * PageLayout.DPI)
-
-    GRID_COLS = 5
-    GRID_ROWS = 5
-
-    GRID_LINE_COLOR = "#69622c"
-    GRID_LINE_THICKNESS = 2
-
-    LABEL_COLOR = "#581a4d"
-
-    FRAME_INNER_PADDING = {
-        "top": int(95 * (PageLayout.DPI / 300)),
-        "bottom": int(120 * (PageLayout.DPI / 300)),
-        "left": int(100 * (PageLayout.DPI / 300)),
-        "right": int(100 * (PageLayout.DPI / 300))
-    } # all values in pixels
-
-    LABEL_HEIGHT_RATIO = 0.14
-    LABEL_GAP_RATIO = 0.3
-    CELL_PADDING_X_RATIO = 0.1
+    CELL_PADDING_X_RATIO = 0.05
     CELL_PADDING_Y_RATIO = 0.05
     LABEL_FONT_SCALE = 1.0
 
@@ -86,6 +54,42 @@ class BingoCardMultiLayout:
     HEADER_IMAGE_PATH = "assets/header/Bingo_Card_Header.png"
     FRAME_IMAGE_PATH = "assets/frame/Halloween_Border.png"
     FREE_SPACE_IMAGE_PATH = "assets/free space/Free_Space.png"
+
+    OUTPUT_PATH = "output/Bingo_Cards.pdf"
+
+class BingoCardMultiLayout:
+    CARD_AMOUNT = 2
+    #CARD_SPACING = int(PageLayout.MARGIN * 2 * PageLayout.DPI)
+
+    HEADER_MARGIN_BOTTOM = int(0.1 * PageLayout.DPI)
+
+    GRID_COLS = 5
+    GRID_ROWS = 5
+
+    GRID_LINE_COLOR = "#69622c"
+    GRID_LINE_THICKNESS = int(3.5 * PageLayout.DPI / 300)
+
+    LABEL_COLOR = "#581a4d"
+
+    FRAME_INNER_PADDING = {
+        "top": int(95 * (PageLayout.DPI / 300)),
+        "bottom": int(160 * (PageLayout.DPI / 300)),
+        "left": int(100 * (PageLayout.DPI / 300)),
+        "right": int(100 * (PageLayout.DPI / 300))
+    } # all values in pixels
+
+    LABEL_HEIGHT_RATIO = 0.14
+    LABEL_GAP_RATIO = 0.3
+    CELL_PADDING_X_RATIO = 0.05
+    CELL_PADDING_Y_RATIO = 0.05
+    LABEL_FONT_SCALE = 1.0
+
+    BINGO_IMAGES_PATH = "assets/bingo images"
+    HEADER_IMAGE_PATH = "assets/header/Bingo_Card_Header.png"
+    FRAME_IMAGE_PATH = "assets/frame/Halloween_Border.png"
+    FREE_SPACE_IMAGE_PATH = "assets/free space/Free_Space.png"
+
+    OUTPUT_PATH = "output/Bingo_Cards_Multi.pdf"
 
 class CallingCardsSinglePageLayout:
     GRID_COLS = 5
@@ -104,6 +108,8 @@ class CallingCardsSinglePageLayout:
 
     BINGO_IMAGES_PATH = "assets/Bingo Images"
     HEADER_IMAGE_PATH = "assets/header/Calling_Card_Header.png"
+
+    OUTPUT_PATH = "output/Calling_Cards.pdf"
 
 class CallingCardsMultiPageLayout:
     GRID_COLS = 2
@@ -127,6 +133,8 @@ class CallingCardsMultiPageLayout:
     BINGO_IMAGES_PATH = "assets/Bingo Images"
     SCISSORS_IMAGE_PATH = "assets/scissors/scissors.png"
 
+    OUTPUT_PATH = "output/Calling_Cards_Multi.pdf"
+
 class TokensLayout:
     GRID_COLS = 9
     GRID_ROWS = 9
@@ -145,3 +153,5 @@ class TokensLayout:
 
     TOKEN_IMAGE_PATH = "assets/Bingo Token/bingotoken.png"
     SCISSORS_IMAGE_PATH = "assets/scissors/Scissors.png"
+
+    OUTPUT_PATH = "output/Tokens.pdf"
