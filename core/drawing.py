@@ -96,7 +96,7 @@ def generate_bingo_cards(page_layout, bingo_card_layout):
     
     bingo_cards = []
     start_total_cards = time.time()
-    # todo: labels need to fit within cell padding
+    # todo: enable label length checking
     for image_set in card_image_sets:
         card = base_card.copy()
         draw = ImageDraw.Draw(card)
@@ -133,15 +133,28 @@ def generate_bingo_cards(page_layout, bingo_card_layout):
 
                     font_size = int(label_height * bingo_card_layout.LABEL_FONT_SCALE)
                     font_loader = lambda size: ImageFont.truetype(page_layout.FONT_PATH, size)
-                    font = fit_text_to_width(label, font_loader, cell_width - 2 * padding_x, font_size)
-                    bbox = font.getbbox(label)
-                    text_width = bbox[2] - bbox[0]
-                    text_x = x0 + (cell_width - text_width) // 2
+                    font = font_loader(font_size)
+
+                    available_width = cell_width - 2 * padding_x
+                    raw_text_width = font.getlength(label)
                     text_y = img_y + img.height + gap
 
-                    draw.text((text_x, text_y), label, font=font, fill=bingo_card_layout.LABEL_COLOR)
-        
-        bingo_cards.append(card)
+                    if raw_text_width > available_width and len(label) > 1:
+                        # Use even spacing
+                        spacing = available_width / len(label)
+                        start_x = x0 + (cell_width - available_width) / 2
+
+                        for i, char in enumerate(label):
+                            char_width = font.getlength(char)
+                            char_x = start_x + (i + 0.5) * spacing - char_width / 2
+                            draw.text((char_x, text_y), char, font=font, fill=bingo_card_layout.LABEL_COLOR)
+                    else:
+                        # Use normal centered label
+                        text_width = font.getlength(label)
+                        text_x = x0 + (cell_width - text_width) / 2
+                        draw.text((text_x, text_y), label, font=font, fill=bingo_card_layout.LABEL_COLOR)
+                            
+            bingo_cards.append(card)
         
     print(f"Generating all cards: {time.time() - start_total_cards:.2f}s")
   
@@ -167,7 +180,7 @@ def generate_bingo_cards_multi(page_layout, bingo_card_multi_layout):
     height = page_layout.WIDTH_PIXELS
     width = page_layout.HEIGHT_PIXELS
     base_card = Image.new("RGBA", (width, height), (255, 255, 255, 255))
-    side_margin = page_layout.MARGIN
+    side_margin = page_layout.LEFT_MARGIN
     top_margin = int(side_margin * 2.5)
     usable_width = (width - 4 * side_margin) // 2
     usable_height = height - 2 * top_margin
@@ -212,7 +225,7 @@ def generate_bingo_cards_multi(page_layout, bingo_card_multi_layout):
     rows = bingo_card_multi_layout.GRID_ROWS
     grid_x = content_x
     grid_2x = content_2x
-    grid_y = content_y + header_height
+    grid_y = content_y + header_height + bingo_card_multi_layout.HEADER_MARGIN_BOTTOM
     grid_height = content_height - header_height
     cell_width = content_width // cols
     cell_height = grid_height // rows
@@ -317,19 +330,40 @@ def generate_bingo_cards_multi(page_layout, bingo_card_multi_layout):
 
                     font_size = int(label_height * bingo_card_multi_layout.LABEL_FONT_SCALE)
                     font_loader = lambda size: ImageFont.truetype(page_layout.FONT_PATH, size)
-                    font_left = fit_text_to_width(label_left, font_loader, cell_width, font_size)
-                    font_right = fit_text_to_width(label_right, font_loader, cell_width, font_size)
-                    bbox_left = font_left.getbbox(label_left)
-                    bbox_right = font_right.getbbox(label_right)
-                    text_left_width = bbox_left[2] - bbox_left[0]
-                    text_right_width = bbox_right[2] - bbox_right[0]
-                    text_x = x0 + (cell_width - text_left_width) // 2
-                    text_2x = x20 + (cell_width - text_right_width) // 2
-                    text_y = img_y + img_left.height + gap
-                    text_2y = img_y + img_right.height + gap
 
-                    draw.text((text_x, text_y), label_left, font=font_left, fill=bingo_card_multi_layout.LABEL_COLOR)
-                    draw.text((text_2x, text_2y), label_right, font=font_right, fill=bingo_card_multi_layout.LABEL_COLOR)
+                    # Left label
+                    font_left = font_loader(font_size)
+                    available_width_left = cell_width - 2 * padding_x
+                    raw_text_width_left = font_left.getlength(label_left)
+                    text_y_left = img_y + img_left.height + gap
+
+                    if raw_text_width_left > available_width_left and len(label_left) > 1:
+                        spacing_left = available_width_left / len(label_left)
+                        start_x_left = x0 + (cell_width - available_width_left) / 2
+                        for i, char in enumerate(label_left):
+                            char_width = font_left.getlength(char)
+                            char_x = start_x_left + (i + 0.5) * spacing_left - char_width / 2
+                            draw.text((char_x, text_y_left), char, font=font_left, fill=bingo_card_multi_layout.LABEL_COLOR)
+                    else:
+                        text_x_left = x0 + (cell_width - raw_text_width_left) / 2
+                        draw.text((text_x_left, text_y_left), label_left, font=font_left, fill=bingo_card_multi_layout.LABEL_COLOR)
+
+                    # Right label
+                    font_right = font_loader(font_size)
+                    available_width_right = cell_width - 2 * padding_x
+                    raw_text_width_right = font_right.getlength(label_right)
+                    text_y_right = img_y + img_right.height + gap
+
+                    if raw_text_width_right > available_width_right and len(label_right) > 1:
+                        spacing_right = available_width_right / len(label_right)
+                        start_x_right = x20 + (cell_width - available_width_right) / 2
+                        for i, char in enumerate(label_right):
+                            char_width = font_right.getlength(char)
+                            char_x = start_x_right + (i + 0.5) * spacing_right - char_width / 2
+                            draw.text((char_x, text_y_right), char, font=font_right, fill=bingo_card_multi_layout.LABEL_COLOR)
+                    else:
+                        text_x_right = x20 + (cell_width - raw_text_width_right) / 2
+                        draw.text((text_x_right, text_y_right), label_right, font=font_right, fill=bingo_card_multi_layout.LABEL_COLOR)
 
         bingo_cards.append(card)
         
@@ -341,7 +375,7 @@ def generate_bingo_cards_multi(page_layout, bingo_card_multi_layout):
         first_card = bingo_cards[0].convert("RGB")
         rest_cards = [card.convert("RGB") for card in bingo_cards[1:]]
         first_card.save(
-            page_layout.OUTPUT_PATH,
+            bingo_card_multi_layout.OUTPUT_PATH,
             "PDF",
             resolution=page_layout.DPI,
             save_all=True,
