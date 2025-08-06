@@ -6,7 +6,7 @@
 # decouple inches from DPI pixel path
 
 class PageLayout:
-    DPI = 225
+    DPI = 300
 
     WIDTH_INCHES = 8.5
     HEIGHT_INCHES = 11
@@ -19,11 +19,12 @@ class PageLayout:
     TOP_MARGIN = int(0.3 * DPI)
 
     FONT_PATH = "assets/fonts/Dekko-Regular.ttf"
-    OUTPUT_PATH = "output/preview_grid.pdf"
+    HOW_TO_PATH = "assets/how to play/How To Play.pdf"
+    OUTPUT_PATH = "output/GameRules_CallingCards_Tokens.pdf"
 
 class BingoCardLayout:
-    CARD_AMOUNT = 2
-
+    CARD_AMOUNT = 50
+    NUM_PDFS = 2
 
     LABEL_COLOR = "#581a4d"
 
@@ -46,7 +47,7 @@ class BingoCardLayout:
 
     LABEL_HEIGHT_RATIO = 0.14
     LABEL_GAP_RATIO = 0.3
-    CELL_PADDING_X_RATIO = 0.05
+    CELL_PADDING_X_RATIO = 0.1
     CELL_PADDING_Y_RATIO = 0.05
     LABEL_FONT_SCALE = 1.0
 
@@ -58,8 +59,7 @@ class BingoCardLayout:
     OUTPUT_PATH = "output/Bingo_Cards.pdf"
 
 class BingoCardMultiLayout:
-    CARD_AMOUNT = 2
-    #CARD_SPACING = int(PageLayout.MARGIN * 2 * PageLayout.DPI)
+    CARD_AMOUNT = 50
 
     HEADER_MARGIN_BOTTOM = int(0.1 * PageLayout.DPI)
 
@@ -80,7 +80,7 @@ class BingoCardMultiLayout:
 
     LABEL_HEIGHT_RATIO = 0.14
     LABEL_GAP_RATIO = 0.3
-    CELL_PADDING_X_RATIO = 0.05
+    CELL_PADDING_X_RATIO = 0.1
     CELL_PADDING_Y_RATIO = 0.05
     LABEL_FONT_SCALE = 1.0
 
@@ -89,7 +89,7 @@ class BingoCardMultiLayout:
     FRAME_IMAGE_PATH = "assets/frame/Halloween_Border.png"
     FREE_SPACE_IMAGE_PATH = "assets/free space/Free_Space.png"
 
-    OUTPUT_PATH = "output/Bingo_Cards_Multi.pdf"
+    OUTPUT_PATH = "output/Bingo_Cards_2_per_page.pdf"
 
 class CallingCardsSinglePageLayout:
     GRID_COLS = 5
