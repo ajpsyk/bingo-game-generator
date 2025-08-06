@@ -1,10 +1,11 @@
+from config.layouts import PageLayout, BingoCardLayout, BingoCardMultiLayout, CallingCardsSinglePageLayout, CallingCardsMultiPageLayout, TokensLayout
 from PIL import Image, ImageDraw, ImageFont
 from core.utils import draw_debug_box, fit_text_to_width 
 import os, random
 import time
 from math import hypot, ceil
 
-def generate_bingo_cards(page_layout, bingo_card_layout):
+def generate_bingo_cards(page_layout: PageLayout, bingo_card_layout: BingoCardLayout):
     global_start = time.time()
     """
     Generates a printable bingo card page with a frame, header, and image grid.
@@ -177,7 +178,7 @@ def generate_bingo_cards(page_layout, bingo_card_layout):
     print(f"Saving PDF: {time.time() - start:.2f}s")
     print(f"Total function time: {time.time() - global_start:.2f}s")
 
-def generate_bingo_cards_multi(page_layout, bingo_card_multi_layout):
+def generate_bingo_cards_multi(page_layout: PageLayout, bingo_card_multi_layout: BingoCardMultiLayout):
     global_start = time.time()
     """
     Generates a printable bingo card page with a frame, header, and image grid.
@@ -390,8 +391,7 @@ def generate_bingo_cards_multi(page_layout, bingo_card_multi_layout):
     print(f"Saving PDF: {time.time() - start:.2f}s")
     print(f"Total function time: {time.time() - global_start:.2f}s")
 
-
-def generate_calling_cards_single(page_layout, calling_card_single_layout):
+def generate_calling_cards_single(page_layout: PageLayout, calling_card_single_layout: CallingCardsSinglePageLayout):
     # generate white canvas and define print-safe area
     height = page_layout.HEIGHT_PIXELS
     width = page_layout.WIDTH_PIXELS
@@ -491,12 +491,11 @@ def generate_calling_cards_single(page_layout, calling_card_single_layout):
 
             page.paste(text_patch, (text_x, text_y))
     
-    print(cell_width * cols, usable_width)
 
     page = page.convert("RGB")
     page.save(calling_card_single_layout.OUTPUT_PATH, "PDF", dpi=(page_layout.DPI, page_layout.DPI))
 
-def generate_calling_cards_multi(page_layout, calling_card_multi_layout):
+def generate_calling_cards_multi(page_layout: PageLayout, calling_card_multi_layout: CallingCardsMultiPageLayout):
     # generate white canvas and define print-safe area
     height = page_layout.HEIGHT_PIXELS
     width = page_layout.WIDTH_PIXELS
@@ -552,7 +551,7 @@ def generate_calling_cards_multi(page_layout, calling_card_multi_layout):
             total_length = int(hypot(x2 - x1, y2 - y1))
             dot_length = 10
             gap_length = 5
-            num_dots = (total_length // (dot_length + gap_length))
+            num_dots = total_length // (dot_length + gap_length)
             dx = (x2 - x1) / total_length
             dy = (y2 - y1) / total_length
 
@@ -640,14 +639,13 @@ def generate_calling_cards_multi(page_layout, calling_card_multi_layout):
             append_images=rest_cards
         )
 
-
-def generate_tokens(page_layout, tokens_layout):
+def generate_tokens(page_layout: PageLayout, tokens_layout: TokensLayout):
     # generate white canvas and define print-safe area
     height = page_layout.HEIGHT_PIXELS
     width = page_layout.WIDTH_PIXELS
     page = Image.new("RGBA", (width, height), (255, 255, 255, 255))
-    usable_width = width - 2 * page_layout.LEFT_MARGIN - page_layout.RIGHT_MARGIN
-    usable_height = height - 2 * page_layout.TOP_MARGIN - page_layout.BOTTOM_MARGIN
+    usable_width = width - page_layout.LEFT_MARGIN - page_layout.RIGHT_MARGIN
+    usable_height = height - page_layout.TOP_MARGIN - page_layout.BOTTOM_MARGIN
 
     # load and paste scissors icon
     scissors = Image.open(tokens_layout.SCISSORS_IMAGE_PATH).convert("RGBA")
@@ -671,9 +669,6 @@ def generate_tokens(page_layout, tokens_layout):
     cell_width = usable_width // cols
     cell_height = grid_height // rows
 
-    print("cell_width:", cell_width, "cell_height:", cell_height)
-    print("grid_width:", cell_width * cols, "grid_height:", cell_height * rows)
-
     for i in range(rows + 1):
         y_line = grid_y + i * cell_height
         x1, y1 = (grid_x, y_line)
@@ -681,7 +676,7 @@ def generate_tokens(page_layout, tokens_layout):
         total_length = int(hypot(x2 - x1, y2 - y1))
         dot_length = 5
         gap_length = 5
-        num_dots = total_length // (dot_length + gap_length)
+        num_dots = total_length // (dot_length + gap_length) + 1
         dx = (x2 - x1) / total_length
         dy = (y2 - y1) / total_length
 
@@ -699,7 +694,7 @@ def generate_tokens(page_layout, tokens_layout):
         total_length = int(hypot(x2 - x1, y2 - y1))
         dot_length = 5
         gap_length = 5
-        num_dots = total_length // (dot_length + gap_length)
+        num_dots = total_length // (dot_length + gap_length) + 1
 
         dx = (x2 - x1) / total_length
         dy = (y2 - y1) / total_length
