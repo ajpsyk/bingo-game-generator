@@ -154,15 +154,21 @@ def generate_bingo_cards(page_layout, bingo_card_layout):
                         text_x = x0 + (cell_width - text_width) / 2
                         draw.text((text_x, text_y), label, font=font, fill=bingo_card_layout.LABEL_COLOR)
                             
-            bingo_cards.append(card)
+        bingo_cards.append(card)
         
-    print(f"Generating all cards: {time.time() - start_total_cards:.2f}s")
+    print(f"Generating bingo cards: {time.time() - start_total_cards:.2f}s")
   
-    if bingo_cards:
-        first_card = bingo_cards[0].convert("RGB")
-        rest_cards = [card.convert("RGB") for card in bingo_cards[1:]]
+    cards_per_pdf = ceil(len(bingo_cards) / bingo_card_layout.NUM_PDFS)
+
+    chunks = [bingo_cards[i:i+cards_per_pdf] for i in range(0, len(bingo_cards), cards_per_pdf)]
+
+    for i, chunk in enumerate(chunks, start=1):
+        first_card = chunk[0].convert("RGB")
+        rest_cards = [card.convert("RGB") for card in chunk[1:]]
+        output_path = bingo_card_layout.OUTPUT_PATH.replace(".pdf", f"_part{i}.pdf")
+
         first_card.save(
-            bingo_card_layout.OUTPUT_PATH,
+            output_path,
             "PDF",
             resolution=page_layout.DPI,
             save_all=True,
@@ -367,7 +373,7 @@ def generate_bingo_cards_multi(page_layout, bingo_card_multi_layout):
 
         bingo_cards.append(card)
         
-    print(f"Generating all cards: {time.time() - start_total_cards:.2f}s")
+    print(f"Generating all bingo cards multi: {time.time() - start_total_cards:.2f}s")
 
 
   
@@ -390,9 +396,8 @@ def generate_calling_cards_single(page_layout, calling_card_single_layout):
     height = page_layout.HEIGHT_PIXELS
     width = page_layout.WIDTH_PIXELS
     page = Image.new("RGBA", (width, height), (255, 255, 255, 255))
-    margin = page_layout.MARGIN
-    usable_width = width - 2 * margin
-    usable_height = height - 2 * margin
+    usable_width = width - page_layout.LEFT_MARGIN - page_layout.RIGHT_MARGIN
+    usable_height = height - page_layout.TOP_MARGIN - page_layout.BOTTOM_MARGIN
 
     # load and paste header
     header = Image.open(calling_card_single_layout.HEADER_IMAGE_PATH).convert("RGBA")
@@ -402,8 +407,8 @@ def generate_calling_cards_single(page_layout, calling_card_single_layout):
         header_width = int(header_width * scale_factor)
         header_height = int(header_height * scale_factor)
         header = header.resize((header_width, header_height), Image.LANCZOS)
-    header_x = page_layout.MARGIN + (usable_width - header_width) // 2
-    header_y = page_layout.MARGIN
+    header_x = page_layout.LEFT_MARGIN + (usable_width - header_width) // 2
+    header_y = page_layout.TOP_MARGIN
     flattened_header = Image.new("RGB", header.size, (255, 255, 255))
     flattened_header.paste(header, (0, 0), mask=header.getchannel("A"))
     page.paste(flattened_header, (header_x, header_y))
@@ -416,8 +421,8 @@ def generate_calling_cards_single(page_layout, calling_card_single_layout):
     line_thickness = calling_card_single_layout.GRID_LINE_THICKNESS
     cols = calling_card_single_layout.GRID_COLS
     rows = calling_card_single_layout.GRID_ROWS
-    grid_x = margin
-    grid_y = margin + header_height
+    grid_x = page_layout.LEFT_MARGIN
+    grid_y = page_layout.TOP_MARGIN + header_height
     grid_height = usable_height - header_height
     cell_width = usable_width // cols
     cell_height = grid_height // rows
@@ -489,16 +494,15 @@ def generate_calling_cards_single(page_layout, calling_card_single_layout):
     print(cell_width * cols, usable_width)
 
     page = page.convert("RGB")
-    page.save(page_layout.OUTPUT_PATH, "PDF", dpi=(page_layout.DPI, page_layout.DPI))
+    page.save(calling_card_single_layout.OUTPUT_PATH, "PDF", dpi=(page_layout.DPI, page_layout.DPI))
 
 def generate_calling_cards_multi(page_layout, calling_card_multi_layout):
     # generate white canvas and define print-safe area
     height = page_layout.HEIGHT_PIXELS
     width = page_layout.WIDTH_PIXELS
     base_page = Image.new("RGBA", (width, height), (255, 255, 255, 255))
-    margin = page_layout.MARGIN
-    usable_width = width - 2 * margin
-    usable_height = height - 2 * margin
+    usable_width = width - page_layout.LEFT_MARGIN - page_layout.RIGHT_MARGIN
+    usable_height = height - page_layout.TOP_MARGIN - page_layout.BOTTOM_MARGIN
 
     # load and paste scissors icon
     scissors = Image.open(calling_card_multi_layout.SCISSORS_IMAGE_PATH).convert("RGBA")
@@ -508,7 +512,7 @@ def generate_calling_cards_multi(page_layout, calling_card_multi_layout):
     scissors = scissors.resize((scissors_width, scissors_height), Image.LANCZOS)
     flattened_scissors = Image.new("RGB", scissors.size, (255, 255, 255))
     flattened_scissors.paste(scissors, (0, 0), mask=scissors.getchannel("A"))
-    base_page.paste(flattened_scissors, (margin, margin))
+    base_page.paste(flattened_scissors, (page_layout.LEFT_MARGIN, page_layout.TOP_MARGIN))
 
     # draw grid
     draw = ImageDraw.Draw(base_page)
@@ -516,8 +520,8 @@ def generate_calling_cards_multi(page_layout, calling_card_multi_layout):
     line_thickness = calling_card_multi_layout.GRID_LINE_THICKNESS
     cols = calling_card_multi_layout.GRID_COLS
     rows = calling_card_multi_layout.GRID_ROWS
-    grid_x = margin
-    grid_y = margin + scissors_height + calling_card_multi_layout.SCISSORS_BOTTOM_MARGIN
+    grid_x = page_layout.LEFT_MARGIN
+    grid_y = page_layout.TOP_MARGIN + scissors_height + calling_card_multi_layout.SCISSORS_BOTTOM_MARGIN
     grid_height = usable_height - scissors_height - calling_card_multi_layout.SCISSORS_BOTTOM_MARGIN
     cell_width = usable_width // cols
     cell_height = grid_height // rows
@@ -629,7 +633,7 @@ def generate_calling_cards_multi(page_layout, calling_card_multi_layout):
         first_card = pages[0].convert("RGB")
         rest_cards = [card.convert("RGB") for card in pages[1:]]
         first_card.save(
-            page_layout.OUTPUT_PATH,
+            calling_card_multi_layout.OUTPUT_PATH,
             "PDF",
             resolution=page_layout.DPI,
             save_all=True,
@@ -642,9 +646,8 @@ def generate_tokens(page_layout, tokens_layout):
     height = page_layout.HEIGHT_PIXELS
     width = page_layout.WIDTH_PIXELS
     page = Image.new("RGBA", (width, height), (255, 255, 255, 255))
-    margin = page_layout.MARGIN
-    usable_width = width - 2 * margin
-    usable_height = height - 2 * margin
+    usable_width = width - 2 * page_layout.LEFT_MARGIN - page_layout.RIGHT_MARGIN
+    usable_height = height - 2 * page_layout.TOP_MARGIN - page_layout.BOTTOM_MARGIN
 
     # load and paste scissors icon
     scissors = Image.open(tokens_layout.SCISSORS_IMAGE_PATH).convert("RGBA")
@@ -654,7 +657,7 @@ def generate_tokens(page_layout, tokens_layout):
     scissors = scissors.resize((scissors_width, scissors_height), Image.LANCZOS)
     flattened_scissors = Image.new("RGB", scissors.size, (255, 255, 255))
     flattened_scissors.paste(scissors, (0, 0), mask=scissors.getchannel("A"))
-    page.paste(flattened_scissors, (margin, margin))
+    page.paste(flattened_scissors, (page_layout.LEFT_MARGIN, page_layout.TOP_MARGIN))
 
     # draw grid
     draw = ImageDraw.Draw(page)
@@ -662,8 +665,8 @@ def generate_tokens(page_layout, tokens_layout):
     line_thickness = tokens_layout.GRID_LINE_THICKNESS
     cols = tokens_layout.GRID_COLS
     rows = tokens_layout.GRID_ROWS
-    grid_x = margin
-    grid_y = margin + scissors_height + tokens_layout.SCISSORS_BOTTOM_MARGIN
+    grid_x = page_layout.LEFT_MARGIN
+    grid_y = page_layout.TOP_MARGIN + scissors_height + tokens_layout.SCISSORS_BOTTOM_MARGIN
     grid_height = usable_height - scissors_height - tokens_layout.SCISSORS_BOTTOM_MARGIN
     cell_width = usable_width // cols
     cell_height = grid_height // rows
@@ -723,4 +726,4 @@ def generate_tokens(page_layout, tokens_layout):
                 page.paste(flattened_token, (img_x, img_y))
 
     page = page.convert("RGB")
-    page.save(page_layout.OUTPUT_PATH, "PDF", dpi=(page_layout.DPI, page_layout.DPI))
+    page.save(tokens_layout.OUTPUT_PATH, "PDF", dpi=(page_layout.DPI, page_layout.DPI))
