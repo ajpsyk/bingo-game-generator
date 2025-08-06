@@ -1,10 +1,3 @@
-"""Static layout config. Might convert to dataclass later if made dynamic."""
-# todos
-# specific output paths for each layout
-# make frame optional
-# maybe make way to save settings
-# decouple inches from DPI pixel path
-
 class PageLayout:
     DPI = 300
 
@@ -12,83 +5,91 @@ class PageLayout:
     HEIGHT_INCHES = 11
     WIDTH_PIXELS = int(WIDTH_INCHES * DPI)
     HEIGHT_PIXELS = int(HEIGHT_INCHES * DPI)
-
-    BOTTOM_MARGIN = int(0.3 * DPI)
-    LEFT_MARGIN = int(0.3 * DPI)
-    RIGHT_MARGIN = int(0.3 * DPI)
-    TOP_MARGIN = int(0.3 * DPI)
-
+    
+    MARGIN_TOP_INCHES = 0.3
+    MARGIN_RIGHT_INCHES = 0.3
+    MARGIN_BOTTOM_INCHES = 0.3
+    MARGIN_LEFT_INCHES = 0.3
+    MARGIN_TOP_PIXELS = int(MARGIN_TOP_INCHES * DPI)
+    MARGIN_RIGHT_PIXELS = int(MARGIN_RIGHT_INCHES * DPI)
+    MARGIN_BOTTOM_PIXELS = int(MARGIN_BOTTOM_INCHES * DPI)
+    MARGIN_LEFT_PIXELS = int(MARGIN_LEFT_INCHES * DPI)
+    
     FONT_PATH = "assets/fonts/Dekko-Regular.ttf"
-    HOW_TO_PATH = "assets/how to play/How To Play.pdf"
+    INSTRUCTIONS_PATH = "assets/how to play/How To Play.pdf"
     OUTPUT_PATH = "output/GameRules_CallingCards_Tokens.pdf"
 
 class BingoCardLayout:
     CARD_AMOUNT = 50
     NUM_PDFS = 2
 
-    LABEL_COLOR = "#581a4d"
-
     FRAME_ENABLED = True
-    FRAME_INNER_PADDING = {
-        "top": int(95 * (PageLayout.DPI / 300)),
-        "bottom": int(160 * (PageLayout.DPI / 300)),
-        "left": int(100 * (PageLayout.DPI / 300)),
-        "right": int(100 * (PageLayout.DPI / 300))
-    } # all values in pixels
-
-
-    HEADER_MARGIN_BOTTOM = int(0.1 * PageLayout.DPI)
+    FRAME_PADDING_TOP_INCHES = 0.317
+    FRAME_PADDING_RIGHT_INCHES = 0.333
+    FRAME_PADDING_BOTTOM_INCHES = 0.533
+    FRAME_PADDING_LEFT_INCHES = 0.333
+    FRAME_PADDING_TOP_PIXELS = int(FRAME_PADDING_TOP_INCHES * PageLayout.DPI)
+    FRAME_PADDING_RIGHT_PIXELS = int(FRAME_PADDING_RIGHT_INCHES * PageLayout.DPI)
+    FRAME_PADDING_BOTTOM_PIXELS = int(FRAME_PADDING_BOTTOM_INCHES * PageLayout.DPI)
+    FRAME_PADDING_LEFT_PIXELS = int(FRAME_PADDING_LEFT_INCHES * PageLayout.DPI)
 
     GRID_COLS = 5
     GRID_ROWS = 5
-
+    GRID_MARGIN_TOP_INCHES = 0.1
+    GRID_MARGIN_TOP_PIXELS = int(GRID_MARGIN_TOP_INCHES * PageLayout.DPI)
     GRID_LINE_COLOR = "#69622c"
-    GRID_LINE_THICKNESS = int(7 * (PageLayout.DPI / 300))
+    GRID_LINE_THICKNESS_INCHES = 0.023
+    GRID_LINE_THICKNESS_PIXELS = int(GRID_LINE_THICKNESS_INCHES * PageLayout.DPI)
 
-    LABEL_HEIGHT_RATIO = 0.14
-    LABEL_GAP_RATIO = 0.3
     CELL_PADDING_X_RATIO = 0.1
     CELL_PADDING_Y_RATIO = 0.05
+
+    LABEL_COLOR = "#581a4d"
+    LABEL_HEIGHT_RATIO = 0.14
+    LABEL_GAP_RATIO = 0.3
     LABEL_FONT_SCALE = 1.0
 
     BINGO_IMAGES_PATH = "assets/bingo images"
     HEADER_IMAGE_PATH = "assets/header/Bingo_Card_Header.png"
     FRAME_IMAGE_PATH = "assets/frame/Halloween_Border.png"
     FREE_SPACE_IMAGE_PATH = "assets/free space/Free_Space.png"
-
     OUTPUT_PATH = "output/Bingo_Cards.pdf"
 
 class BingoCardMultiLayout:
     CARD_AMOUNT = 50
+    NUM_PDFS = 2
 
-    HEADER_MARGIN_BOTTOM = int(0.1 * PageLayout.DPI)
+    FRAME_ENABLED = True
+    FRAME_PADDING_TOP_INCHES = 0.317
+    FRAME_PADDING_RIGHT_INCHES = 0.333
+    FRAME_PADDING_BOTTOM_INCHES = 0.533
+    FRAME_PADDING_LEFT_INCHES = 0.333
+    FRAME_PADDING_TOP_PIXELS = int(FRAME_PADDING_TOP_INCHES * PageLayout.DPI)
+    FRAME_PADDING_RIGHT_PIXELS = int(FRAME_PADDING_RIGHT_INCHES * PageLayout.DPI)
+    FRAME_PADDING_BOTTOM_PIXELS = int(FRAME_PADDING_BOTTOM_INCHES * PageLayout.DPI)
+    FRAME_PADDING_LEFT_PIXELS = int(FRAME_PADDING_LEFT_INCHES * PageLayout.DPI)
+
+    HEADER_MARGIN_BOTTOM_INCHES = 0.1
+    HEADER_MARGIN_BOTTOM_PIXELS = int(HEADER_MARGIN_BOTTOM_INCHES * PageLayout.DPI)
 
     GRID_COLS = 5
     GRID_ROWS = 5
-
     GRID_LINE_COLOR = "#69622c"
-    GRID_LINE_THICKNESS = int(3.5 * PageLayout.DPI / 300)
+    GRID_LINE_THICKNESS_INCHES = 0.023
+    GRID_LINE_THICKNESS_PIXELS = int(GRID_LINE_THICKNESS_INCHES * PageLayout.DPI)
 
-    LABEL_COLOR = "#581a4d"
-
-    FRAME_INNER_PADDING = {
-        "top": int(95 * (PageLayout.DPI / 300)),
-        "bottom": int(160 * (PageLayout.DPI / 300)),
-        "left": int(100 * (PageLayout.DPI / 300)),
-        "right": int(100 * (PageLayout.DPI / 300))
-    } # all values in pixels
-
-    LABEL_HEIGHT_RATIO = 0.14
-    LABEL_GAP_RATIO = 0.3
     CELL_PADDING_X_RATIO = 0.1
     CELL_PADDING_Y_RATIO = 0.05
+
+    LABEL_COLOR = "#581a4d"
+    LABEL_HEIGHT_RATIO = 0.14
+    LABEL_GAP_RATIO = 0.3
     LABEL_FONT_SCALE = 1.0
 
     BINGO_IMAGES_PATH = "assets/bingo images"
     HEADER_IMAGE_PATH = "assets/header/Bingo_Card_Header.png"
     FRAME_IMAGE_PATH = "assets/frame/Halloween_Border.png"
     FREE_SPACE_IMAGE_PATH = "assets/free space/Free_Space.png"
-
     OUTPUT_PATH = "output/Bingo_Cards_2_per_page.pdf"
 
 class CallingCardsSinglePageLayout:
@@ -96,19 +97,19 @@ class CallingCardsSinglePageLayout:
     GRID_ROWS = 6
 
     GRID_LINE_COLOR = "#545454"
-    GRID_LINE_THICKNESS = 2
+    GRID_LINE_THICKNESS_INCHES = 0.007
+    GRID_LINE_THICKNESS_PIXELS = int(GRID_LINE_THICKNESS_INCHES * PageLayout.DPI)
 
-    LABEL_COLOR = "#581a4d"
-
-    LABEL_HEIGHT_RATIO = 0.14
-    LABEL_GAP_RATIO = 0.3
     CELL_PADDING_X_RATIO = 0.1
     CELL_PADDING_Y_RATIO = 0.05
+
+    LABEL_COLOR = "#581a4d"
+    LABEL_HEIGHT_RATIO = 0.14
+    LABEL_GAP_RATIO = 0.3
     LABEL_FONT_SCALE = 1.0
 
     BINGO_IMAGES_PATH = "assets/Bingo Images"
     HEADER_IMAGE_PATH = "assets/header/Calling_Card_Header.png"
-
     OUTPUT_PATH = "output/Calling_Cards.pdf"
 
 class CallingCardsMultiPageLayout:
@@ -116,14 +117,15 @@ class CallingCardsMultiPageLayout:
     GRID_ROWS = 2
 
     GRID_LINE_COLOR = "#69622c"
-    GRID_LINE_THICKNESS = 2
+    GRID_LINE_THICKNESS_INCHES = 0.007
+    GRID_LINE_THICKNESS_PIXELS = int(GRID_LINE_THICKNESS_INCHES * PageLayout.DPI)
 
-    LABEL_COLOR = "#581a4d"
-
-    LABEL_HEIGHT_RATIO = 0.14
-    LABEL_GAP_RATIO = 0.3
     CELL_PADDING_X_RATIO = 0.1
     CELL_PADDING_Y_RATIO = 0.05
+
+    LABEL_COLOR = "#581a4d"
+    LABEL_HEIGHT_RATIO = 0.14
+    LABEL_GAP_RATIO = 0.3
     LABEL_FONT_SCALE = 1.0
 
     SCISSORS_WIDTH_SCALE_FACTOR = 0.15625
@@ -132,7 +134,6 @@ class CallingCardsMultiPageLayout:
 
     BINGO_IMAGES_PATH = "assets/Bingo Images"
     SCISSORS_IMAGE_PATH = "assets/scissors/scissors.png"
-
     OUTPUT_PATH = "output/Calling_Cards_Multi.pdf"
 
 class TokensLayout:
@@ -153,5 +154,4 @@ class TokensLayout:
 
     TOKEN_IMAGE_PATH = "assets/Bingo Token/bingotoken.png"
     SCISSORS_IMAGE_PATH = "assets/scissors/Scissors.png"
-
     OUTPUT_PATH = "output/Tokens.pdf"
