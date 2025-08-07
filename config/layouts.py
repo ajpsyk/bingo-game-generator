@@ -10,6 +10,7 @@ class PageLayout:
     MARGIN_RIGHT_INCHES = 0.3
     MARGIN_BOTTOM_INCHES = 0.3
     MARGIN_LEFT_INCHES = 0.3
+
     MARGIN_TOP_PIXELS = int(MARGIN_TOP_INCHES * DPI)
     MARGIN_RIGHT_PIXELS = int(MARGIN_RIGHT_INCHES * DPI)
     MARGIN_BOTTOM_PIXELS = int(MARGIN_BOTTOM_INCHES * DPI)
@@ -24,10 +25,12 @@ class BingoCardLayout:
     NUM_PDFS = 2
 
     FRAME_ENABLED = True
+
     FRAME_PADDING_TOP_INCHES = 0.317
     FRAME_PADDING_RIGHT_INCHES = 0.333
     FRAME_PADDING_BOTTOM_INCHES = 0.533
     FRAME_PADDING_LEFT_INCHES = 0.333
+
     FRAME_PADDING_TOP_PIXELS = int(FRAME_PADDING_TOP_INCHES * PageLayout.DPI)
     FRAME_PADDING_RIGHT_PIXELS = int(FRAME_PADDING_RIGHT_INCHES * PageLayout.DPI)
     FRAME_PADDING_BOTTOM_PIXELS = int(FRAME_PADDING_BOTTOM_INCHES * PageLayout.DPI)
@@ -35,8 +38,10 @@ class BingoCardLayout:
 
     GRID_COLS = 5
     GRID_ROWS = 5
+
     GRID_MARGIN_TOP_INCHES = 0.1
     GRID_MARGIN_TOP_PIXELS = int(GRID_MARGIN_TOP_INCHES * PageLayout.DPI)
+
     GRID_LINE_COLOR = "#69622c"
     GRID_LINE_THICKNESS_INCHES = 0.023
     GRID_LINE_THICKNESS_PIXELS = int(GRID_LINE_THICKNESS_INCHES * PageLayout.DPI)
@@ -50,27 +55,28 @@ class BingoCardLayout:
     LABEL_FONT_SCALE = 1.0
 
     BINGO_IMAGES_PATH = "assets/bingo images"
-    HEADER_IMAGE_PATH = "assets/header/Bingo_Card_Header.png"
-    FRAME_IMAGE_PATH = "assets/frame/Halloween_Border.png"
-    FREE_SPACE_IMAGE_PATH = "assets/free space/Free_Space.png"
+    HEADER_IMAGE_PATH = "assets/header/Hygge_Header.png"
+    FRAME_IMAGE_PATH = "assets/frame/hygge_bingo.png"
+    FREE_SPACE_IMAGE_PATH = "assets/free space/Free Space.png"
     OUTPUT_PATH = "output/Bingo_Cards.pdf"
 
 class BingoCardMultiLayout:
-    CARD_AMOUNT = 50
-    NUM_PDFS = 2
+    CARD_AMOUNT = 2
+    NUM_PDFS = 1
 
     FRAME_ENABLED = True
     FRAME_PADDING_TOP_INCHES = 0.317
     FRAME_PADDING_RIGHT_INCHES = 0.333
     FRAME_PADDING_BOTTOM_INCHES = 0.533
     FRAME_PADDING_LEFT_INCHES = 0.333
+
     FRAME_PADDING_TOP_PIXELS = int(FRAME_PADDING_TOP_INCHES * PageLayout.DPI)
     FRAME_PADDING_RIGHT_PIXELS = int(FRAME_PADDING_RIGHT_INCHES * PageLayout.DPI)
     FRAME_PADDING_BOTTOM_PIXELS = int(FRAME_PADDING_BOTTOM_INCHES * PageLayout.DPI)
     FRAME_PADDING_LEFT_PIXELS = int(FRAME_PADDING_LEFT_INCHES * PageLayout.DPI)
 
-    HEADER_MARGIN_BOTTOM_INCHES = 0.1
-    HEADER_MARGIN_BOTTOM_PIXELS = int(HEADER_MARGIN_BOTTOM_INCHES * PageLayout.DPI)
+    GRID_MARGIN_TOP_INCHES = 0.1
+    GRID_MARGIN_TOP_PIXELS = int(GRID_MARGIN_TOP_INCHES * PageLayout.DPI)
 
     GRID_COLS = 5
     GRID_ROWS = 5
@@ -87,20 +93,27 @@ class BingoCardMultiLayout:
     LABEL_FONT_SCALE = 1.0
 
     BINGO_IMAGES_PATH = "assets/bingo images"
-    HEADER_IMAGE_PATH = "assets/header/Bingo_Card_Header.png"
-    FRAME_IMAGE_PATH = "assets/frame/Halloween_Border.png"
-    FREE_SPACE_IMAGE_PATH = "assets/free space/Free_Space.png"
+    HEADER_IMAGE_PATH = "assets/header/Hygge_Header.png"
+    FRAME_IMAGE_PATH = "assets/frame/hygge_bingo.png"
+    FREE_SPACE_IMAGE_PATH = "assets/free space/Free Space.png"
     OUTPUT_PATH = "output/Bingo_Cards_2_per_page.pdf"
 
 class CallingCardsSinglePageLayout:
+    NUM_PDFS = 1
+
     GRID_COLS = 5
     GRID_ROWS = 6
+
+    FRAME_ENABLED = False
 
     GRID_LINE_COLOR = "#545454"
     GRID_LINE_THICKNESS_INCHES = 0.007
     GRID_LINE_THICKNESS_PIXELS = int(GRID_LINE_THICKNESS_INCHES * PageLayout.DPI)
 
-    CELL_PADDING_X_RATIO = 0.1
+    GRID_MARGIN_TOP_INCHES = 0.15
+    GRID_MARGIN_TOP_PIXELS = int(GRID_MARGIN_TOP_INCHES * PageLayout.DPI)
+
+    CELL_PADDING_X_RATIO = 0.15
     CELL_PADDING_Y_RATIO = 0.05
 
     LABEL_COLOR = "#581a4d"
@@ -109,12 +122,15 @@ class CallingCardsSinglePageLayout:
     LABEL_FONT_SCALE = 1.0
 
     BINGO_IMAGES_PATH = "assets/Bingo Images"
-    HEADER_IMAGE_PATH = "assets/header/Calling_Card_Header.png"
+    HEADER_IMAGE_PATH = "assets/calling card header/hygge_calling_cards_header.png"
     OUTPUT_PATH = "output/Calling_Cards.pdf"
 
 class CallingCardsMultiPageLayout:
+    CARD_AMOUNT = 1
     GRID_COLS = 2
     GRID_ROWS = 2
+
+    FRAME_ENABLED = False
 
     GRID_LINE_COLOR = "#69622c"
     GRID_LINE_THICKNESS_INCHES = 0.007
@@ -130,7 +146,8 @@ class CallingCardsMultiPageLayout:
 
     SCISSORS_WIDTH_SCALE_FACTOR = 0.15625
     SCISSORS_HEIGHT_SCALE_FACTOR = 0.07142857142857142857142857142857
-    SCISSORS_BOTTOM_MARGIN = 50
+    GRID_MARGIN_TOP_INCHES = 0.167
+    GRID_MARGIN_TOP_PIXELS = int(GRID_MARGIN_TOP_INCHES * PageLayout.DPI)
 
     BINGO_IMAGES_PATH = "assets/Bingo Images"
     SCISSORS_IMAGE_PATH = "assets/scissors/scissors.png"
@@ -152,6 +169,6 @@ class TokensLayout:
     SCISSORS_HEIGHT_SCALE_FACTOR = 0.07142857142857142857142857142857
     SCISSORS_BOTTOM_MARGIN = 50
 
-    TOKEN_IMAGE_PATH = "assets/Bingo Token/bingotoken.png"
+    TOKEN_IMAGE_PATH = "assets/bingo token/Token.png"
     SCISSORS_IMAGE_PATH = "assets/scissors/Scissors.png"
     OUTPUT_PATH = "output/Tokens.pdf"

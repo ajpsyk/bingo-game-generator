@@ -16,7 +16,7 @@ def main():
     generate_calling_cards_single(page_layout, calling_card_single_layout)
     generate_calling_cards_multi(page_layout, calling_card_multi_layout)
     merge_pdfs(page_layout.OUTPUT_PATH, 
-               [page_layout.HOW_TO_PATH, tokens_layout.OUTPUT_PATH, calling_card_single_layout.OUTPUT_PATH, calling_card_multi_layout.OUTPUT_PATH]
+               [page_layout.INSTRUCTIONS_PATH, tokens_layout.OUTPUT_PATH, calling_card_single_layout.OUTPUT_PATH, calling_card_multi_layout.OUTPUT_PATH]
                )
     
 if __name__ == "__main__":

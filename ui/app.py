@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from config.layouts import PageLayout, BingoCardLayout, BingoCardMultiLayout, TokensLayout, CallingCardsSinglePageLayout, CallingCardsMultiPageLayout
 
 def main():
     root = tk.Tk()
@@ -44,16 +45,65 @@ def main():
 
 
 def create_page_layout_tab(tab):
+
+    fields = [
+        ("DPI:", PageLayout.DPI),
+        ("Page Width (in):", PageLayout.WIDTH_INCHES),
+        ("Page Height (in):", PageLayout.HEIGHT_INCHES),
+        ("Top Margin (in):", PageLayout.MARGIN_TOP_INCHES),
+        ("Right Margin (in):", PageLayout.MARGIN_RIGHT_INCHES),
+        ("Bottom Margin (in):", PageLayout.MARGIN_BOTTOM_INCHES),
+        ("Left Margin (in):", PageLayout.MARGIN_LEFT_INCHES),
+        ("Font Path:", PageLayout.FONT_PATH),
+        ("How To Path:", PageLayout.INSTRUCTIONS_PATH),
+        ("Game Rules, Calling Cards, Tokens Path:", PageLayout.OUTPUT_PATH),
+    ]
+
+    entries = {}
+    
+    for i, (label_text, default_value) in enumerate(fields):
+        label = tk.Label(tab, text=label_text)
+        label.grid(row=i, column=0, sticky='e', padx=5, pady=2)
+        
+        entry = tk.Entry(tab, width=50)
+        entry.grid(row=i, column=1, sticky='w', padx=5, pady=2)
+        entry.insert(0, str(default_value))
+        
+        entries[label_text] = entry
+
+def create_bingo_cards_single_tab(tab):
+    fields = [
+        ("Card Amount:", BingoCardLayout.CARD_AMOUNT),
+        ("Number of PDFS:", BingoCardLayout.NUM_PDFS),
+        ("Label Color (hex):", BingoCardLayout.LABEL_COLOR),
+        ("Frame Enabled:", BingoCardLayout.FRAME_ENABLED),
+        ("Frame Padding:", PageLayout.RIGHT_MARGIN_INCHES),
+        ("Bottom Margin (in):", PageLayout.BOTTOM_MARGIN_INCHES),
+        ("Left Margin (in):", PageLayout.LEFT_MARGIN_INCHES),
+        ("Font Path:", PageLayout.FONT_PATH),
+        ("How To Path:", PageLayout.HOW_TO_PATH),
+        ("Game Rules, Calling Cards, Tokens Path:", PageLayout.OUTPUT_PATH),
+    ]
+
+    entries = {}
+    
+    for i, (label_text, default_value) in enumerate(fields):
+        label = tk.Label(tab, text=label_text)
+        label.grid(row=i, column=0, sticky='e', padx=5, pady=2)
+        
+        entry = tk.Entry(tab, width=50)
+        entry.grid(row=i, column=1, sticky='w', padx=5, pady=2)
+        entry.insert(0, str(default_value))
+        
+        entries[label_text] = entry
+
+def create_bingo_cards_double_tab(tab):
     pass
-def create_bingo_cards_single_tab(tab1):
+def create_tokens_tab(tab):
     pass
-def create_bingo_cards_double_tab(tab2):
+def create_calling_cards_single_tab(tab):
     pass
-def create_tokens_tab(tab3):
-    pass
-def create_calling_cards_single_tab(tab4):
-    pass
-def create_calling_cards_multi_page_tab(tab5):
+def create_calling_cards_multi_page_tab(tab):
     pass
 
 if __name__ == '__main__':
