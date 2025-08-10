@@ -1,8 +1,6 @@
 /venv
-/output
-/assets
-/header
-/Frame
-/fonts
 __pycache__/
 *.py[cod]
+build/
+dist/
+*.spec
