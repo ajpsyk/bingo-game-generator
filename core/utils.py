@@ -4,18 +4,17 @@ import os
 import random
 from math import ceil
 from pypdf import PdfWriter, PdfReader
-import fitz
 
 def create_canvas(page_layout: PageLayout, layout):
     # generate blank canvas and define print-safe area
     if type(layout).__name__ == "BingoCardMultiLayout":
-        height = page_layout.WIDTH_PIXELS
-        width = page_layout.HEIGHT_PIXELS
+        height = int(page_layout.WIDTH_INCHES * page_layout.DPI)
+        width = int(page_layout.HEIGHT_INCHES * page_layout.DPI)
 
-        top_margin = int(page_layout.MARGIN_TOP_PIXELS * 2.5)
-        right_margin = page_layout.MARGIN_RIGHT_PIXELS
-        bottom_margin = int(page_layout.MARGIN_TOP_PIXELS * 2.5)
-        left_margin = page_layout.MARGIN_LEFT_PIXELS
+        top_margin = int(page_layout.MARGIN_TOP_INCHES * page_layout.DPI * 2.5)
+        right_margin = int(page_layout.MARGIN_RIGHT_INCHES * page_layout.DPI)
+        bottom_margin = int(page_layout.MARGIN_TOP_INCHES * page_layout.DPI * 2.5)
+        left_margin = int(page_layout.MARGIN_LEFT_INCHES * page_layout.DPI)
 
         base_card = Image.new("RGBA", (width, height), (255, 255, 255, 255))
         usable_width = (width - 2 * left_margin - 2 * right_margin) // 2
@@ -24,16 +23,16 @@ def create_canvas(page_layout: PageLayout, layout):
 
         # load and paste frame
         if layout.FRAME_ENABLED:
-            frame = Image.open(layout.FRAME_IMAGE_PATH).convert("RGBA").resize((usable_width, usable_height), Image.LANCZOS)
+            frame = Image.open(page_layout.FRAME_IMAGE_PATH).convert("RGBA").resize((usable_width, usable_height), Image.LANCZOS)
             flattened_frame = Image.new("RGB", frame.size, (255, 255, 255))
             flattened_frame.paste(frame, (0,0), mask=frame.getchannel("A"))
             base_card.paste(flattened_frame, (left_margin, top_margin))
             base_card.paste(flattened_frame,  (x_offset,  top_margin))
             frame_padding = {
-                "top": layout.FRAME_PADDING_TOP_PIXELS,
-                "right": layout.FRAME_PADDING_RIGHT_PIXELS,
-                "bottom": layout.FRAME_PADDING_BOTTOM_PIXELS,
-                "left": layout.FRAME_PADDING_LEFT_PIXELS
+                "top": int(layout.FRAME_PADDING_TOP_INCHES * page_layout.DPI),
+                "right": int(layout.FRAME_PADDING_RIGHT_INCHES * page_layout.DPI),
+                "bottom": int(layout.FRAME_PADDING_BOTTOM_INCHES * page_layout.DPI),
+                "left": int(layout.FRAME_PADDING_LEFT_INCHES * page_layout.DPI)
             }
         else:
             frame_padding = {"top": 0, "right": 0, "bottom": 0, "left": 0}
@@ -49,12 +48,12 @@ def create_canvas(page_layout: PageLayout, layout):
         return  base_card, content_x, content_y, content_2x, content_width, content_height
 
     else:
-        height = page_layout.HEIGHT_PIXELS
-        width = page_layout.WIDTH_PIXELS
-        top_margin = page_layout.MARGIN_TOP_PIXELS
-        right_margin = page_layout.MARGIN_RIGHT_PIXELS
-        bottom_margin = page_layout.MARGIN_BOTTOM_PIXELS
-        left_margin = page_layout.MARGIN_LEFT_PIXELS
+        height = int(page_layout.HEIGHT_INCHES * page_layout.DPI)
+        width = int(page_layout.WIDTH_INCHES * page_layout.DPI)
+        top_margin = int(page_layout.MARGIN_TOP_INCHES * page_layout.DPI)
+        right_margin = int(page_layout.MARGIN_RIGHT_INCHES * page_layout.DPI)
+        bottom_margin = int(page_layout.MARGIN_BOTTOM_INCHES * page_layout.DPI)
+        left_margin = int(page_layout.MARGIN_LEFT_INCHES * page_layout.DPI)
 
         base_card = Image.new("RGBA", (width, height), (255, 255, 255, 255))
         
@@ -63,15 +62,15 @@ def create_canvas(page_layout: PageLayout, layout):
 
         # load and paste frame (optional)
         if layout.FRAME_ENABLED:
-            frame = Image.open(layout.FRAME_IMAGE_PATH).convert("RGBA").resize((usable_width, usable_height), Image.LANCZOS)
+            frame = Image.open(page_layout.FRAME_IMAGE_PATH).convert("RGBA").resize((usable_width, usable_height), Image.LANCZOS)
             flattened_frame = Image.new("RGB", frame.size, (255, 255, 255))
             flattened_frame.paste(frame, (0,0), mask=frame.getchannel("A"))
-            base_card.paste(flattened_frame, (page_layout.MARGIN_LEFT_PIXELS, page_layout.MARGIN_TOP_PIXELS))
+            base_card.paste(flattened_frame, (left_margin, top_margin))
             frame_padding = {
-                "top": layout.FRAME_PADDING_TOP_PIXELS,
-                "right": layout.FRAME_PADDING_RIGHT_PIXELS,
-                "bottom": layout.FRAME_PADDING_BOTTOM_PIXELS,
-                "left": layout.FRAME_PADDING_LEFT_PIXELS
+                "top": int(layout.FRAME_PADDING_TOP_INCHES * page_layout.DPI),
+                "right": int(layout.FRAME_PADDING_RIGHT_INCHES * page_layout.DPI),
+                "bottom": int(layout.FRAME_PADDING_BOTTOM_INCHES * page_layout.DPI),
+                "left": int(layout.FRAME_PADDING_LEFT_INCHES * page_layout.DPI)
             }
         else:
             frame_padding = {"top": 0, "right": 0, "bottom": 0, "left": 0}
@@ -84,9 +83,9 @@ def create_canvas(page_layout: PageLayout, layout):
         
         return base_card, content_x, content_y, content_width, content_height
 
-def load_and_paste_header(layout, canvas, usable_width, x, y):
+def load_and_paste_header(header_path, layout, canvas, usable_width, x, y):
     # load and paste header
-    header = Image.open(layout.HEADER_IMAGE_PATH).convert("RGBA")
+    header = Image.open(header_path).convert("RGBA")
     header_width, header_height = header.size
     if header_width != usable_width:
         scale_factor = usable_width / header_width
@@ -98,12 +97,12 @@ def load_and_paste_header(layout, canvas, usable_width, x, y):
     canvas.paste(flattened_header, (x, y))
     return header_height
 
-def draw_grid(layout, base_card, content_x, content_y, content_width, content_height, header_height):
+def draw_grid(page_layout, layout, base_card, content_x, content_y, content_width, content_height, header_height):
     # draw grid
     draw = ImageDraw.Draw(base_card)
     line_color = layout.GRID_LINE_COLOR
-    line_thickness = layout.GRID_LINE_THICKNESS_PIXELS
-    grid_top_margin = layout.GRID_MARGIN_TOP_PIXELS
+    line_thickness = int(layout.GRID_LINE_THICKNESS_INCHES * page_layout.DPI)
+    grid_top_margin = int(layout.GRID_MARGIN_TOP_INCHES * page_layout.DPI)
     cols = layout.GRID_COLS
     rows = layout.GRID_ROWS
     grid_x = content_x
@@ -126,7 +125,7 @@ def draw_grid(layout, base_card, content_x, content_y, content_width, content_he
                   width=line_thickness)
     return cell_width, cell_height, grid_x, grid_y
 
-def load_images_and_labels(layout, cell_height, cell_width):
+def load_images_and_labels(page_layout, layout, cell_height, cell_width):
     # load images and labels
     padding_y = int(cell_height * layout.CELL_PADDING_Y_RATIO)
     padding_x = int(cell_width * layout.CELL_PADDING_X_RATIO)
@@ -137,8 +136,8 @@ def load_images_and_labels(layout, cell_height, cell_width):
 
 
     flattened_fs = None
-    if hasattr(layout, "FREE_SPACE_IMAGE_PATH") and layout.FREE_SPACE_IMAGE_PATH:
-        free_space_path = layout.FREE_SPACE_IMAGE_PATH
+    if layout.HAS_FREE_SPACE and page_layout.FREE_SPACE_IMAGE_PATH:
+        free_space_path = page_layout.FREE_SPACE_IMAGE_PATH
         free_space_img = Image.open(free_space_path).convert("RGBA").resize(
             (available_img_width, available_img_height), Image.LANCZOS
         )
@@ -146,7 +145,7 @@ def load_images_and_labels(layout, cell_height, cell_width):
         flattened_fs.paste(free_space_img, (0, 0), mask=free_space_img.getchannel("A"))
     
     loaded_images = {}
-    image_directory = layout.BINGO_IMAGES_PATH
+    image_directory = page_layout.BINGO_IMAGES_PATH
     image_files = os.listdir(image_directory)
 
     for file in image_files:
@@ -172,11 +171,10 @@ def shuffle_images(layout, loaded_images):
 def paste_single_card(page_layout, card, draw, loaded_images, free_space_img, image_set, cell_width, cell_height, grid_x, grid_y, layout):
     cols = layout.GRID_COLS
     rows = layout.GRID_ROWS
-    label_height = int(cell_height * layout.LABEL_HEIGHT_RATIO)
+    label_height = cell_height * layout.LABEL_HEIGHT_RATIO
     padding_y = int(cell_height * layout.CELL_PADDING_Y_RATIO)
     padding_x = int(cell_width * layout.CELL_PADDING_X_RATIO)
     gap = int(label_height * layout.LABEL_GAP_RATIO)
-
     image_iter = iter(image_set)
 
     center_x = grid_x + 2 * cell_width
@@ -185,8 +183,7 @@ def paste_single_card(page_layout, card, draw, loaded_images, free_space_img, im
         fs_x = center_x + (cell_width - free_space_img.width) // 2
         fs_y = center_y + (cell_height - free_space_img.height) // 2
 
-    font_size = int(label_height * layout.LABEL_FONT_SCALE)
-    font = ImageFont.truetype(page_layout.FONT_PATH, font_size)
+    font = ImageFont.truetype(page_layout.FONT_PATH, label_height)
 
     for row in range(rows):
         for col in range(cols):
@@ -231,16 +228,22 @@ def paste_images(page_layout, layout, base_card, loaded_images, free_space_img, 
 
 def save_as_pdf(page_layout: PageLayout, layout, cards):
     cards_per_pdf = ceil(len(cards) / layout.NUM_PDFS)
-
     chunks = [cards[i:i+cards_per_pdf] for i in range(0, len(cards), cards_per_pdf)]
+
+    dir_path = page_layout.OUTPUT_PATH if page_layout.OUTPUT_PATH else os.getcwd()
+    base_filename = f"{page_layout.THEME}_{layout.FILE_NAME}.pdf"
+    base_output_path = os.path.join(dir_path, base_filename)
 
     for i, chunk in enumerate(chunks, start=1):
         first_card = chunk[0].convert("RGB")
         rest_cards = [card.convert("RGB") for card in chunk[1:]]
+
         if layout.NUM_PDFS > 1:
-            output_path = layout.OUTPUT_PATH.replace(".pdf", f"_part{i}.pdf")
+            base, ext = os.path.splitext(base_output_path)
+            output_path = f"{base}_Part{i}{ext}"
         else:
-            output_path = layout.OUTPUT_PATH
+            # If only 1 PDF, don't add _Part1 suffix, use base filename directly
+            output_path = base_output_path
 
         first_card.save(
             output_path,
@@ -289,21 +292,41 @@ def fit_text_to_width(text, font_loader, max_width, initial_size, min_size=8):
 
     return font
 
-def merge_pdfs(output_path, pdf_paths):
+def merge_howto_tokens_callingcards(page_layout, single_layout, multi_layout, tokens_layout):
+    output_path = page_layout.OUTPUT_PATH
+    theme = page_layout.THEME.strip()
+    merged_filename = "Calling Cards, Tokens, and How To's.pdf"
+    full_output_path = os.path.join(output_path, merged_filename)
+
+    pdf_paths = [
+        page_layout.INSTRUCTIONS_PATH,
+        os.path.join(output_path, f"{tokens_layout.FILE_NAME}.pdf"),  # no theme prefix
+        os.path.join(output_path, f"{theme}_{single_layout.FILE_NAME}.pdf"),  # theme prefix here only
+        os.path.join(output_path, f"{multi_layout.FILE_NAME}.pdf"),  # no theme prefix
+    ]
+
     writer = PdfWriter()
-    for path in pdf_paths:
-        reader = PdfReader(path)
-        for page in reader.pages:
-            writer.add_page(page)
-    with open(output_path, "wb") as f_out:
+    print("Merging these files:")
+    for pdf_path in pdf_paths:
+        if os.path.exists(pdf_path):
+            reader = PdfReader(pdf_path)
+            for page in reader.pages:
+                writer.add_page(page)
+        else:
+            print(f"Warning: PDF not found for merging: {pdf_path}")
+
+    with open(full_output_path, "wb") as f_out:
         writer.write(f_out)
+    print(f"Merged PDF saved to: {full_output_path}")
 
-def get_resolution_from_pdf():
-    doc = fitz.open("my_pdf.pdf")
+    # Clean up generated PDFs except instructions/how-to
+    files_to_cleanup = [
+        os.path.join(output_path, f"{tokens_layout.FILE_NAME}.pdf"),
+        os.path.join(output_path, f"{theme}_{single_layout.FILE_NAME}.pdf"),
+        os.path.join(output_path, f"{multi_layout.FILE_NAME}.pdf"),
+    ]
 
-    for page in doc:
-        for img in page.get_images(full=True):
-            xref = img[0]
-            pix = fitz.Pixmap(doc, xref)
-            print(f"Image: {pix.width}x{pix.height} px")
-
+    for file_path in files_to_cleanup:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"Deleted temporary file: {file_path}")
