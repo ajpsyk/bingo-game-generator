@@ -17,7 +17,7 @@ class PageLayout:
     THEME: str = field(default="", metadata={"label": "Theme Name:", "input_type": "entry", "group": "Page Layout (in)", "section": "", "order": 1, "hidden": False, "spacer_after": False})
     DPI: int = field(default=300, metadata={"label": "DPI (dots per inch):", "input_type": "entry", "group": "Page Layout (in)", "section": "", "order": 2, "hidden": False, "spacer_after": False})
     WIDTH_INCHES: float = field(default=8.5, metadata={"label": "Width (in):", "input_type": "entry", "group": "Page Layout (in)", "section": "", "order": 3, "hidden": False, "spacer_after": False})
-    HEIGHT_INCHES: float = field(default=11.0, metadata={"label": "Height (in):", "input_type": "entry", "group": "Page Layout (in)", "section": "", "order": 4, "hidden": False, "spacer_after": True})
+    HEIGHT_INCHES: float = field(default=11, metadata={"label": "Height (in):", "input_type": "entry", "group": "Page Layout (in)", "section": "", "order": 4, "hidden": False, "spacer_after": True})
     
     MARGIN_TOP_INCHES: float = field(default=0.3, metadata={"label": "Margin Top (in):", "input_type": "entry", "group": "Page Layout (in)", "section": "Margin", "order": 5, "hidden": False, "spacer_after": False})
     MARGIN_RIGHT_INCHES: float = field(default=0.3, metadata={"label": "Margin Right (in):", "input_type": "entry", "group": "Page Layout (in)", "section": "Margin", "order": 6, "hidden": False, "spacer_after": False})

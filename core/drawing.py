@@ -79,8 +79,8 @@ def generate_calling_cards_single(page_layout: PageLayout, calling_card_single_l
     
     cell_width, cell_height, grid_x, grid_y = draw_grid(
         page_layout, calling_card_single_layout, base_card,
-        content_x, content_y + header_height, content_width, content_height - header_height,
-        0
+        content_x, content_y, content_width, content_height,
+        header_height
     )
     
     loaded_images, _ = load_images_and_labels(page_layout, calling_card_single_layout, cell_height, cell_width)

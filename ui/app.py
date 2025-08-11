@@ -87,7 +87,7 @@ def build_tabs(notebook, tabs, layout_instances):
     return tab_elements, tab_frames
 
 def create_fields(tab, instances):
-    groups = defaultdict(lambda: defaultdict(list))  # group -> section -> list of (label, widget, is_header)
+    groups = defaultdict(lambda: defaultdict(list))
 
     for instance in instances:
         for field in fields(instance):
@@ -106,7 +106,6 @@ def create_fields(tab, instances):
                 widget.field_name = field_name
                 widget.instance = instance
 
-            # Always append a tuple - never append anything else
             groups[group][section].append((label, widget, is_header))
 
     return groups
@@ -162,11 +161,9 @@ def create_widget_for_field(tab, input_type, default_value, instance, field_name
 def position_elements(tab, groups):
     col_idx = 0
     for group_name, sections in groups.items():
-        # Skip empty or 'Default' group to avoid empty columns pushing layout
         if not group_name or group_name.lower() == "default":
             continue
 
-        # Create group header (column title)
         group_label = ttk.Label(tab, text=group_name, font=('Segoe UI', 12, 'bold'))
         group_label.grid(row=0, column=col_idx * 2, columnspan=2, pady=(10, 5), sticky='w', padx=(30, 5))
 
@@ -179,19 +176,17 @@ def position_elements(tab, groups):
                 previous_spacer_after = False
 
             if section_name:
-                # Create section header label here (once per section)
                 section_label = ttk.Label(tab, text=section_name, font=('Segoe UI', 10, 'bold'))
                 section_label.grid(row=row, column=col_idx * 2, columnspan=2, sticky='w', padx=(20, 5), pady=(10, 5))
                 row += 1
 
             for label, widget, is_header in items:
-                # Skip hidden fields
                 if widget and hasattr(widget, 'instance') and hasattr(widget, 'field_name'):
                     instance = widget.instance
                     field_name = widget.field_name
                     f = next((f for f in fields(type(instance)) if f.name == field_name), None)
                     if f and f.metadata.get("hidden", False):
-                        continue  # skip this field
+                        continue
 
                 label.grid(row=row, column=col_idx * 2, sticky='e', padx=5, pady=2)
                 if widget:
